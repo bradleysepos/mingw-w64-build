@@ -64,6 +64,7 @@ function mingw-w64-build {  # mingw-w64-build $TARGET_PARAM $TARGET_DIR
     check_dependencies "${DEPS[@]}" || return 1
 
     # package names
+    local CONFIG_NAME BINUTILS_NAME MINGW_W64_NAME GMP_NAME MPFR_NAME MPC_NAME ISL_NAME GCC_NAME NAMES
     CONFIG_NAME="config"
     BINUTILS_NAME="binutils"
     MINGW_W64_NAME="mingw-w64"
@@ -89,7 +90,7 @@ function mingw-w64-build {  # mingw-w64-build $TARGET_PARAM $TARGET_DIR
     #GCC_VER="4.9.2"
 
     # urls
-    local CONFIG_URL BINUTILS_URL MINGW_W64_URL GMP_URL MPFR_URL MPC_URL ISL_URL GCC_URL
+    local CONFIG_URL BINUTILS_URL MINGW_W64_URL GMP_URL MPFR_URL MPC_URL ISL_URL GCC_URL URLS
     CONFIG_URL="http://git.savannah.gnu.org/gitweb/?p=config.git;a=snapshot;h=${CONFIG_VER};sf=tgz"
     BINUTILS_URL="https://ftp.gnu.org/gnu/binutils/binutils-${BINUTILS_VER}.tar.bz2"
     MINGW_W64_URL="http://downloads.sourceforge.net/project/mingw-w64/mingw-w64/mingw-w64-release/mingw-w64-v${MINGW_W64_VER}.tar.bz2"
@@ -101,7 +102,7 @@ function mingw-w64-build {  # mingw-w64-build $TARGET_PARAM $TARGET_DIR
     URLS=("${CONFIG_URL}" "${BINUTILS_URL}" "${MINGW_W64_URL}" "${GMP_URL}" "${MPFR_URL}" "${MPC_URL}" "${ISL_URL}" "${GCC_URL}")
 
     # filenames
-    local CONFIG_PKG BINUTILS_PKG MINGW_W64_PKG GMP_PKG MPFR_PKG MPC_PKG ISL_PKG GCC_PKG
+    local CONFIG_PKG BINUTILS_PKG MINGW_W64_PKG GMP_PKG MPFR_PKG MPC_PKG ISL_PKG GCC_PKG PKGS
     CONFIG_PKG="config-${CONFIG_VER}.tar.gz"
     BINUTILS_PKG="binutils-${BINUTILS_VER}.tar.bz2"
     MINGW_W64_PKG="mingw-w64-v${MINGW_W64_VER}.tar.bz2"
@@ -262,6 +263,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}"
 
     # host
     echo "host:"
+    local SYS_NAME SYS_ARCH SYS_TYPE CPU_COUNT
     SYS_NAME=$(uname | awk '{ print tolower($0)}')
     SYS_ARCH=$(uname -m)
     SYS_TYPE=$("${SOURCE_DIR}/config/config-${CONFIG_VER}/config.guess")
@@ -358,6 +360,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}"
 
     # gcc core
     echo "  gcc ${GCC_VER} core"
+    local GCC_CONFIG_EXTRA
     GCC_CONFIG_EXTRA=""
     if [[ "${SYS_NAME}" == "darwin" ]]; then
         GCC_CONFIG_EXTRA="--with-system-zlib"
