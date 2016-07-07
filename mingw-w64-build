@@ -85,6 +85,8 @@ function mingw-w64-build {  # mingw-w64-build $TARGET_PARAM $TARGET_DIR
     MPC_VER="1.0.3"
     ISL_VER="0.14"
     GCC_VER="5.4.0"
+    #ISL_VER="0.12.2"
+    #GCC_VER="4.9.2"
 
     # urls
     local CONFIG_URL BINUTILS_URL MINGW_W64_URL GMP_URL MPFR_URL MPC_URL ISL_URL GCC_URL
