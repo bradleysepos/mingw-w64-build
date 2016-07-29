@@ -261,7 +261,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
             download_url "${DOWNLOAD_VERBOSE}" "${PKG_DIR}/${PKGS[I]}" ${URLS[@]} || return 1
         fi
         if ! tar -tf "${PKG_DIR}/${PKGS[I]}" >/dev/null 2>&1; then
-            echo "unable to verify package: ${PKG_DIR}/${PKGS[I]}" >2
+            echo "unable to verify package: ${PKG_DIR}/${PKGS[I]}" >&2
             return 1
         fi
     done
@@ -275,7 +275,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         fi
         mkdir -p "${SOURCE_DIR}/${NAMES[I]}"
         if ! tar -xf "${PKG_DIR}/${PKGS[I]}" -C "${SOURCE_DIR}/${NAMES[I]}" >/dev/null 2>&1; then
-            echo "unable to extract package: ${PKG_DIR}/${PKGS[I]}" >2
+            echo "unable to extract package: ${PKG_DIR}/${PKGS[I]}" >&2
             return 1
         fi
     done
