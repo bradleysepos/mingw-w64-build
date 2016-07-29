@@ -41,7 +41,7 @@ function download_url {  # download_url $VERBOSE $FILE $URLS
     fi
     FAILED=()
     for I in "${!URLS[@]}"; do
-        if ! curl --fail --head -L "${URLS[I]}" >/dev/null 2>&1; then
+        if ! curl --head -Lf "${URLS[I]}" >/dev/null 2>&1; then
             FAILED+=("${URLS[I]}")
             if [[ "$(( ${I} + 1 ))" -lt "${#URLS[@]}" ]]; then
                 continue
