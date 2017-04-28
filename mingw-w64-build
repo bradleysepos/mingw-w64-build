@@ -98,7 +98,7 @@ function mingw-w64-build {  # mingw-w64-build $TARGET_PARAM $TARGET_DIR
     BINUTILS_VER="2.28"
     MINGW_W64_VER="5.0.0"
     GMP_VER="6.1.2"
-    MPFR_VER="3.1.4"
+    MPFR_VER="3.1.5"
     MPC_VER="1.0.3"
     ISL_VER="0.14"
     GCC_VER="5.4.0"
