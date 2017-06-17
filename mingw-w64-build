@@ -351,7 +351,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # build
     local TOTAL
-    TOTAL=9
+    TOTAL=10
     echo ""
     echo -n "Building "
 
@@ -493,6 +493,16 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     make -j "${CPU_COUNT}" install-target-libgcc >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
     make -j "${CPU_COUNT}" >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
     make install-strip >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
+
+    # winpthreads
+    echo -en "${CREL}"
+    printf "Building    [%02i/%02i] %s " "10" "${TOTAL}" "winpthreads"
+    touch "${BUILD_DIR}/winpthreads.log"
+    mkdir -pv "${BUILD_DIR}/winpthreads" > "${BUILD_DIR}/winpthreads.log" 2>&1 || return 1
+    cd "${BUILD_DIR}/winpthreads"
+    "${SOURCE_DIR}/mingw-w64/mingw-w64-v${MINGW_W64_VER}/mingw-w64-libraries/winpthreads/configure" --build="${SYS_TYPE}" --host="${TARGET}" --prefix="${MINGW_W64_DIR}" --disable-shared --enable-static >> "${BUILD_DIR}/winpthreads.log" 2>&1 || return 1
+    make -j "${CPU_COUNT}" >> "${BUILD_DIR}/winpthreads.log" 2>&1 || return 1
+    make install >> "${BUILD_DIR}/winpthreads.log" 2>&1 || return 1
 
     # clean up
     cd "${MINGW_W64_DIR}"
