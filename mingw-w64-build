@@ -100,8 +100,8 @@ function mingw-w64-build {  # mingw-w64-build $TARGET_PARAM $TARGET_DIR
     GMP_VER="6.1.2"
     MPFR_VER="3.1.5"
     MPC_VER="1.0.3"
-    ISL_VER="0.14"
-    GCC_VER="5.4.0"
+    ISL_VER="0.18"
+    GCC_VER="7.1.0"
 
     # filenames
     local CONFIG_PKG BINUTILS_PKG MINGW_W64_PKG GMP_PKG MPFR_PKG MPC_PKG ISL_PKG GCC_PKG PKGS
@@ -123,7 +123,7 @@ function mingw-w64-build {  # mingw-w64-build $TARGET_PARAM $TARGET_DIR
     GMP_URLS=("https://ftp.gnu.org/gnu/gmp/gmp-${GMP_VER}.tar.bz2")
     MPFR_URLS=("https://ftp.gnu.org/gnu/mpfr/mpfr-${MPFR_VER}.tar.gz")
     MPC_URLS=("https://ftp.gnu.org/gnu/mpc/mpc-${MPC_VER}.tar.gz")
-    ISL_URLS=("ftp://gcc.gnu.org/pub/gcc/infrastructure/isl-${ISL_VER}.tar.bz2" "http://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/infrastructure/isl-${ISL_VER}.tar.bz2")
+    ISL_URLS=("http://isl.gforge.inria.fr/isl-${ISL_VER}.tar.bz2")
     GCC_URLS=("https://ftp.gnu.org/gnu/gcc/gcc-${GCC_VER}/gcc-${GCC_VER}.tar.bz2")
     URLS_VARNAMES=('CONFIG_URLS' 'BINUTILS_URLS' 'MINGW_W64_URLS' 'GMP_URLS' 'MPFR_URLS' 'MPC_URLS' 'ISL_URLS' 'GCC_URLS')
 
