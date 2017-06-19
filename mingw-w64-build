@@ -302,7 +302,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     echo "  binutils ${BINUTILS_VER}"
     mkdir -pv "${BUILD_DIR}/binutils" > "${BUILD_DIR}/binutils.log" 2>&1 || return 1
     cd "${BUILD_DIR}/binutils"
-    CC=gcc CXX=g++ "${SOURCE_DIR}/binutils/binutils-${BINUTILS_VER}/configure" --build="${SYS_TYPE}" --target="${TARGET}" --with-sysroot="${MINGW_W64_DIR}" --prefix="${MINGW_W64_DIR}" --disable-multilib --disable-werror --disable-shared --enable-static >> "${BUILD_DIR}/binutils.log" 2>&1 || return 1
+    "${SOURCE_DIR}/binutils/binutils-${BINUTILS_VER}/configure" CC=gcc CXX=g++ --build="${SYS_TYPE}" --target="${TARGET}" --with-sysroot="${MINGW_W64_DIR}" --prefix="${MINGW_W64_DIR}" --disable-multilib --disable-werror --disable-shared --enable-static >> "${BUILD_DIR}/binutils.log" 2>&1 || return 1
     make -j "${CPU_COUNT}" >> "${BUILD_DIR}/binutils.log" 2>&1 || return 1
     make install-strip >> "${BUILD_DIR}/binutils.log" 2>&1 || return 1
 
@@ -339,7 +339,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     GMP_DIR="${BUILD_DIR}/gmp-${GMP_VER}-${SYS_ARCH}"
     mkdir -pv "${BUILD_DIR}/gmp" > "${BUILD_DIR}/gmp.log" 2>&1 || return 1
     cd "${BUILD_DIR}/gmp"
-    CC=gcc CXX=g++ CPPFLAGS=-fexceptions "${SOURCE_DIR}/gmp/gmp-${GMP_VER}/configure" --build="${SYS_TYPE}" --prefix="${GMP_DIR}" --enable-cxx --disable-shared --enable-static >> "${BUILD_DIR}/gmp.log" 2>&1 || return 1
+    "${SOURCE_DIR}/gmp/gmp-${GMP_VER}/configure" CC=gcc CXX=g++ CPPFLAGS=-fexceptions --build="${SYS_TYPE}" --prefix="${GMP_DIR}" --enable-cxx --disable-shared --enable-static >> "${BUILD_DIR}/gmp.log" 2>&1 || return 1
     make -j "${CPU_COUNT}" >> "${BUILD_DIR}/gmp.log" 2>&1 || return 1
     make check >> "${BUILD_DIR}/gmp.log" 2>&1 || return 1
     make install >> "${BUILD_DIR}/gmp.log" 2>&1 || return 1
@@ -350,7 +350,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     MPFR_DIR="${BUILD_DIR}/mpfr-${MPFR_VER}-${SYS_ARCH}"
     mkdir -pv "${BUILD_DIR}/mpfr" > "${BUILD_DIR}/mpfr.log" 2>&1 || return 1
     cd "${BUILD_DIR}/mpfr"
-    CC=gcc CXX=g++ CFLAGS="-I${GMP_DIR}/include" CPPFLAGS="-I${GMP_DIR}/include" LDFLAGS="-L${GMP_DIR}/lib" "${SOURCE_DIR}/mpfr/mpfr-${MPFR_VER}/configure" --build="${SYS_TYPE}" --prefix="${MPFR_DIR}" --with-gmp="${GMP_DIR}" --disable-shared --enable-static >> "${BUILD_DIR}/mpfr.log" 2>&1 || return 1
+    "${SOURCE_DIR}/mpfr/mpfr-${MPFR_VER}/configure" CC=gcc CXX=g++ CFLAGS="-I${GMP_DIR}/include" CPPFLAGS="-I${GMP_DIR}/include" LDFLAGS="-L${GMP_DIR}/lib" --build="${SYS_TYPE}" --prefix="${MPFR_DIR}" --with-gmp="${GMP_DIR}" --disable-shared --enable-static >> "${BUILD_DIR}/mpfr.log" 2>&1 || return 1
     make -j "${CPU_COUNT}" >> "${BUILD_DIR}/mpfr.log" 2>&1 || return 1
     make install >> "${BUILD_DIR}/mpfr.log" 2>&1 || return 1
 
@@ -360,7 +360,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     MPC_DIR="${BUILD_DIR}/mpc-${MPC_VER}-${SYS_ARCH}"
     mkdir -pv "${BUILD_DIR}/mpc" > "${BUILD_DIR}/mpc.log" 2>&1 || return 1
     cd "${BUILD_DIR}/mpc"
-    CC=gcc CXX=g++ CFLAGS="-I${GMP_DIR}/include -I${MPFR_DIR}/include" CPPFLAGS="-I${GMP_DIR}/include -I${MPFR_DIR}/include" LDFLAGS="-L${GMP_DIR}/lib -L${MPFR_DIR}/lib" "${SOURCE_DIR}/mpc/mpc-${MPC_VER}/configure" --build="${SYS_TYPE}" --prefix="${MPC_DIR}" --with-gmp="${GMP_DIR}" --with-mpfr="${MPFR_DIR}" --disable-shared --enable-static >> "${BUILD_DIR}/mpc.log" 2>&1 || return 1
+    "${SOURCE_DIR}/mpc/mpc-${MPC_VER}/configure" CC=gcc CXX=g++ CFLAGS="-I${GMP_DIR}/include -I${MPFR_DIR}/include" CPPFLAGS="-I${GMP_DIR}/include -I${MPFR_DIR}/include" LDFLAGS="-L${GMP_DIR}/lib -L${MPFR_DIR}/lib" --build="${SYS_TYPE}" --prefix="${MPC_DIR}" --with-gmp="${GMP_DIR}" --with-mpfr="${MPFR_DIR}" --disable-shared --enable-static >> "${BUILD_DIR}/mpc.log" 2>&1 || return 1
     make -j "${CPU_COUNT}" >> "${BUILD_DIR}/mpc.log" 2>&1 || return 1
     make install >> "${BUILD_DIR}/mpc.log" 2>&1 || return 1
 
@@ -370,7 +370,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     ISL_DIR="${BUILD_DIR}/isl-${ISL_VER}-${SYS_ARCH}"
     mkdir -pv "${BUILD_DIR}/isl" > "${BUILD_DIR}/isl.log" 2>&1 || return 1
     cd "${BUILD_DIR}/isl"
-    CC=gcc CXX=g++ CFLAGS="-I${GMP_DIR}/include" CPPFLAGS="-I${GMP_DIR}/include" LDFLAGS="-L${GMP_DIR}/lib" "${SOURCE_DIR}/isl/isl-${ISL_VER}/configure" --build="${SYS_TYPE}" --prefix="${ISL_DIR}" --with-gmp="${GMP_DIR}" --disable-shared --enable-static >> "${BUILD_DIR}/isl.log" 2>&1 || return 1
+    "${SOURCE_DIR}/isl/isl-${ISL_VER}/configure" CC=gcc CXX=g++ CFLAGS="-I${GMP_DIR}/include" CPPFLAGS="-I${GMP_DIR}/include" LDFLAGS="-L${GMP_DIR}/lib" --build="${SYS_TYPE}" --prefix="${ISL_DIR}" --with-gmp="${GMP_DIR}" --disable-shared --enable-static >> "${BUILD_DIR}/isl.log" 2>&1 || return 1
     make -j "${CPU_COUNT}" >> "${BUILD_DIR}/isl.log" 2>&1 || return 1
     make install >> "${BUILD_DIR}/isl.log" 2>&1 || return 1
 
@@ -383,7 +383,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     fi
     mkdir -pv "${BUILD_DIR}/gcc" > "${BUILD_DIR}/gcc.log" 2>&1 || return 1
     cd "${BUILD_DIR}/gcc"
-    CFLAGS="-I${GMP_DIR}/include -I${MPFR_DIR}/include -I${MPC_DIR}/include -I${ISL_DIR}/include" CPPFLAGS="-I${GMP_DIR}/include -I${MPFR_DIR}/include -I${MPC_DIR}/include -I${ISL_DIR}/include" LDFLAGS="-L${GMP_DIR}/lib -L${MPFR_DIR}/lib -L${MPC_DIR}/lib -L${ISL_DIR}/lib" "${SOURCE_DIR}/gcc/gcc-${GCC_VER}/configure" --build="${SYS_TYPE}" --host="${SYS_TYPE}" --target="${TARGET}" --prefix="${MINGW_W64_DIR}" --with-sysroot="${MINGW_W64_DIR}" --with-gmp="${GMP_DIR}" --with-mpfr="${MPFR_DIR}" --with-mpc="${MPC_DIR}" --with-isl="${ISL_DIR}" --disable-multilib --disable-nls --disable-libstdcxx-pch --disable-win32-registry --enable-checking=release --enable-languages=c,c++ --enable-lto --disable-shared --enable-static "${GCC_CONFIG_EXTRA[@]}" >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
+    "${SOURCE_DIR}/gcc/gcc-${GCC_VER}/configure" CFLAGS="-I${GMP_DIR}/include -I${MPFR_DIR}/include -I${MPC_DIR}/include -I${ISL_DIR}/include" CPPFLAGS="-I${GMP_DIR}/include -I${MPFR_DIR}/include -I${MPC_DIR}/include -I${ISL_DIR}/include" LDFLAGS="-L${GMP_DIR}/lib -L${MPFR_DIR}/lib -L${MPC_DIR}/lib -L${ISL_DIR}/lib" --build="${SYS_TYPE}" --host="${SYS_TYPE}" --target="${TARGET}" --prefix="${MINGW_W64_DIR}" --with-sysroot="${MINGW_W64_DIR}" --with-gmp="${GMP_DIR}" --with-mpfr="${MPFR_DIR}" --with-mpc="${MPC_DIR}" --with-isl="${ISL_DIR}" --disable-multilib --disable-nls --disable-libstdcxx-pch --disable-win32-registry --enable-checking=release --enable-languages=c,c++ --enable-lto --disable-shared --enable-static "${GCC_CONFIG_EXTRA[@]}" >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
     make -j "${CPU_COUNT}" all-gcc >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
     make install-gcc >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
 
