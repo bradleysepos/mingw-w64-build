@@ -392,9 +392,9 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     local MINGW_W64_CONFIG_EXTRA
     MINGW_W64_CONFIG_EXTRA=()
     if [[ "${TARGET}" == "${TARGET_i686}" ]]; then
-        MINGW_W64_CONFIG_EXTRA+=("--disable-lib64")
+        MINGW_W64_CONFIG_EXTRA+=("--enable-lib32" "--disable-lib64")
     elif [[ "${TARGET}" == "${TARGET_x86_64}" ]]; then
-        MINGW_W64_CONFIG_EXTRA+=("--disable-lib32")
+        MINGW_W64_CONFIG_EXTRA+=("--enable-lib64" "--disable-lib32")
     fi
     mkdir -pv "${BUILD_DIR}/mingw-w64-crt" > "${BUILD_DIR}/mingw-w64-crt.log" 2>&1 || return 1
     cd "${BUILD_DIR}/mingw-w64-crt"
