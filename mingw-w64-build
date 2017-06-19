@@ -374,8 +374,8 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     make -j "${CPU_COUNT}" >> "${BUILD_DIR}/isl.log" 2>&1 || return 1
     make install >> "${BUILD_DIR}/isl.log" 2>&1 || return 1
 
-    # gcc core
-    echo "  gcc ${GCC_VER} core"
+    # gcc compilers
+    echo "  gcc ${GCC_VER} compilers"
     local GCC_CONFIG_EXTRA
     GCC_CONFIG_EXTRA=()
     if [[ "${SYS_NAME}" == "darwin" ]]; then
@@ -409,8 +409,8 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     cd "${TARGET}"
     ln -s ../lib lib
 
-    # gcc
-    echo "  gcc ${GCC_VER}"
+    # gcc libraries
+    echo "  gcc ${GCC_VER} libraries"
     cd "${BUILD_DIR}/gcc"
     make -j "${CPU_COUNT}" all-target-libgcc >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
     make -j "${CPU_COUNT}" install-target-libgcc >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
