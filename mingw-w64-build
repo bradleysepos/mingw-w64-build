@@ -399,12 +399,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     mkdir -pv "${BUILD_DIR}/mingw-w64-crt" > "${BUILD_DIR}/mingw-w64-crt.log" 2>&1 || return 1
     cd "${BUILD_DIR}/mingw-w64-crt"
     "${SOURCE_DIR}/mingw-w64/mingw-w64-v${MINGW_W64_VER}/mingw-w64-crt/configure" --build="${SYS_TYPE}" --host="${TARGET}" --prefix="${MINGW_W64_DIR}" --with-sysroot="${MINGW_W64_DIR}" "${MINGW_W64_CONFIG_EXTRA[@]}" >> "${BUILD_DIR}/mingw-w64-crt.log" 2>&1 || return 1
-    if [[ "${SYS_NAME}" == "darwin" ]]; then
-        # parallel build fails on darwin
-        make -j 1 >> "${BUILD_DIR}/mingw-w64-crt.log" 2>&1 || return 1
-    else
-        make -j "${CPU_COUNT}" >> "${BUILD_DIR}/mingw-w64-crt.log" 2>&1 || return 1
-    fi
+    make -j "${CPU_COUNT}" >> "${BUILD_DIR}/mingw-w64-crt.log" 2>&1 || return 1
     make install-strip >> "${BUILD_DIR}/mingw-w64-crt.log" 2>&1 || return 1
 
     # relocate and symlink libs
