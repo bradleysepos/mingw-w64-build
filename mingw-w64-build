@@ -191,7 +191,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         return 1
     fi
 
-    # dirs
+    # cleaning and directory creation
     echo "path: ${TARGET_DIR}"
     local MINGW_W64_DIR PKG_DIR SOURCE_DIR BUILD_DIR
     MINGW_W64_DIR="${TARGET_DIR}/${PREFIX}"
@@ -230,31 +230,13 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     fi
     if [[ -e "${MINGW_W64_DIR}" ]]; then
         # prefix dir should not exist
-        echo "directory exists: ${MINGW_W64_DIR}" >&2
-        return 1
-    fi
-    mkdir -p "${MINGW_W64_DIR}"
-    if [[ ! -d "${MINGW_W64_DIR}" ]]; then
-        echo "unable to create directory: ${MINGW_W64_DIR}" >&2
+        echo "unable to create directory (exists): ${MINGW_W64_DIR}" >&2
+        echo "remove with: ${SELF_NAME} ${TARGET_PARAM%%.*}.distclean${2:+ $2}" >&2
         return 1
     fi
     mkdir -p "${PKG_DIR}"
     if [[ ! -d "${PKG_DIR}" ]]; then
         echo "unable to create directory: ${PKG_DIR}" >&2
-        return 1
-    fi
-    mkdir -p "${SOURCE_DIR}"
-    if [[ ! -d "${SOURCE_DIR}" ]]; then
-        echo "unable to create directory: ${SOURCE_DIR}" >&2
-        return 1
-    fi
-    if [[ -e "${BUILD_DIR}" ]]; then
-        # never reuse build dir
-        rm -rf "${BUILD_DIR}"
-    fi
-    mkdir -p "${BUILD_DIR}"
-    if [[ ! -d "${BUILD_DIR}" ]]; then
-        echo "unable to create directory: ${BUILD_DIR}" >&2
         return 1
     fi
 
@@ -278,6 +260,27 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
             return 1
         fi
     done
+
+    # additional directory creation
+    mkdir -p "${MINGW_W64_DIR}"
+    if [[ ! -d "${MINGW_W64_DIR}" ]]; then
+        echo "unable to create directory: ${MINGW_W64_DIR}" >&2
+        return 1
+    fi
+    mkdir -p "${SOURCE_DIR}"
+    if [[ ! -d "${SOURCE_DIR}" ]]; then
+        echo "unable to create directory: ${SOURCE_DIR}" >&2
+        return 1
+    fi
+    if [[ -e "${BUILD_DIR}" ]]; then
+        # never reuse build dir
+        rm -rf "${BUILD_DIR}"
+    fi
+    mkdir -p "${BUILD_DIR}"
+    if [[ ! -d "${BUILD_DIR}" ]]; then
+        echo "unable to create directory: ${BUILD_DIR}" >&2
+        return 1
+    fi
 
     # extract
     echo "extract:"
