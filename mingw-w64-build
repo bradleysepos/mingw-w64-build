@@ -248,11 +248,11 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         echo "  ${PKGS[I]}"
         URLS_IREF="${URLS_VARNAMES[I]}[@]"
         URLS="${!URLS_IREF}"
-        CHECKSUM=$(shasum -a 256 "${PKG_DIR}/${PKGS[I]}" | awk '{ print $1 }')
+        CHECKSUM=$(shasum -a 256 "${PKG_DIR}/${PKGS[I]}" 2>/dev/null | awk '{ print $1 }')
         if [[ "${CHECKSUM}" != "${CHECKSUMS[I]}" ]] >/dev/null 2>&1; then
             download_url "${DOWNLOAD_VERBOSE}" "${PKG_DIR}/${PKGS[I]}" ${URLS[@]} || return 1
         fi
-        CHECKSUM=$(shasum -a 256 "${PKG_DIR}/${PKGS[I]}" | awk '{ print $1 }')
+        CHECKSUM=$(shasum -a 256 "${PKG_DIR}/${PKGS[I]}" 2>/dev/null | awk '{ print $1 }')
         if [[ "${CHECKSUM}" != "${CHECKSUMS[I]}" ]]; then
             echo "checksum mismatch for package: ${PKG_DIR}/${PKGS[I]}" >&2
             echo "expected: ${CHECKSUMS[I]}" >&2
