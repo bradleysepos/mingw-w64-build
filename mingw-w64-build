@@ -154,6 +154,7 @@ targets:
   x86_64
   x86_64.clean
   x86_64.distclean
+  pkgclean
 default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER}"
 
     # args
@@ -176,14 +177,17 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     PREFIX_i686="mingw-w64-i686"
     PREFIX_x86_64="mingw-w64-x86_64"
     case "${TARGET_PARAM}" in
-        i686|i686.clean|i686.distclean|i686.pkgclean)
+        i686|i686.clean|i686.distclean)
             TARGET="${TARGET_i686}"
             PREFIX="${PREFIX_i686}"
             ;;
-        x86_64|x86_64.clean|x86_64.distclean|x86_64.pkgclean)
+        x86_64|x86_64.clean|x86_64.distclean)
             TARGET="${TARGET_x86_64}"
             PREFIX="${PREFIX_x86_64}"
             ;;
+        pkgclean)
+            TARGET="pkgclean"
+            PREFIX="pkgclean"
     esac
     if [[ "${PREFIX:-}" == "" ]]; then
         echo -e "${HELP}"
@@ -215,7 +219,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
             echo "complete."
             return 0
             ;;
-        i686.pkgclean|x86_64.pkgclean)
+        pkgclean)
             echo "pkgclean:"
             echo "  rm -rf \"${PKG_DIR}\""
             rm -rf "${PKG_DIR}"
