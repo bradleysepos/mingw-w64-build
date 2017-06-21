@@ -127,6 +127,18 @@ function mingw-w64-build {  # mingw-w64-build $TARGET_PARAM $TARGET_DIR
     GCC_URLS=("https://ftp.gnu.org/gnu/gcc/gcc-${GCC_VER}/gcc-${GCC_VER}.tar.bz2")
     URLS_VARNAMES=('CONFIG_URLS' 'BINUTILS_URLS' 'MINGW_W64_URLS' 'GMP_URLS' 'MPFR_URLS' 'MPC_URLS' 'ISL_URLS' 'GCC_URLS')
 
+    # checksums
+    local CONFIG_SHA256 BINUTILS_SHA256 MINGW_W64_SHA256 GMP_SHA256 MPFR_SHA256 MPC_SHA256 ISL_SHA256 GCC_SHA256 CHECKSUMS
+    CONFIG_SHA256="4642c727613ca922197932520e663477c9c13038683a320fb36ade2c8d525404"
+    BINUTILS_SHA256="6297433ee120b11b4b0a1c8f3512d7d73501753142ab9e2daa13c5a3edd32a72"
+    MINGW_W64_SHA256="5f46e80ff1a9102a37a3453743dae9df98262cba7c45306549ef7432cfd92cfd"
+    GMP_SHA256="5275bb04f4863a13516b2f39392ac5e272f5e1bb8057b18aec1c9b79d73d8fb2"
+    MPFR_SHA256="f4eb5070883aee3fd8b927751ea63ff95aebe24418cde852439ce74c3dd2513c"
+    MPC_SHA256="617decc6ea09889fb08ede330917a00b16809b8db88c29c31bfbb49cbf88ecc3"
+    ISL_SHA256="6b8b0fd7f81d0a957beb3679c81bbb34ccc7568d5682844d8924424a0dadcb1b"
+    GCC_SHA256="8a8136c235f64c6fef69cac0d73a46a1a09bb250776a050aec8f9fc880bebc17"
+    CHECKSUMS=("${CONFIG_SHA256}" "${BINUTILS_SHA256}" "${MINGW_W64_SHA256}" "${GMP_SHA256}" "${MPFR_SHA256}" "${MPC_SHA256}" "${ISL_SHA256}" "${GCC_SHA256}")
+
     # internal vars
     local NAME VERSION SELF SELF_NAME HELP
     NAME="mingw-w64-build"
@@ -248,17 +260,21 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # verify/fetch
     echo "verify:"
-    local DOWNLOAD_VERBOSE I URLS_IREF URLS
+    local DOWNLOAD_VERBOSE I URLS_IREF URLS CHECKSUM
     DOWNLOAD_VERBOSE=true
     for I in "${!PKGS[@]}"; do
         echo "  ${PKGS[I]}"
         URLS_IREF="${URLS_VARNAMES[I]}[@]"
         URLS="${!URLS_IREF}"
-        if ! tar -tf "${PKG_DIR}/${PKGS[I]}" >/dev/null 2>&1; then
+        CHECKSUM=$(shasum -a 256 "${PKG_DIR}/${PKGS[I]}" | awk '{ print $1 }')
+        if [[ "${CHECKSUM}" != "${CHECKSUMS[I]}" ]] >/dev/null 2>&1; then
             download_url "${DOWNLOAD_VERBOSE}" "${PKG_DIR}/${PKGS[I]}" ${URLS[@]} || return 1
         fi
-        if ! tar -tf "${PKG_DIR}/${PKGS[I]}" >/dev/null 2>&1; then
-            echo "unable to verify package: ${PKG_DIR}/${PKGS[I]}" >&2
+        CHECKSUM=$(shasum -a 256 "${PKG_DIR}/${PKGS[I]}" | awk '{ print $1 }')
+        if [[ "${CHECKSUM}" != "${CHECKSUMS[I]}" ]]; then
+            echo "checksum mismatch for package: ${PKG_DIR}/${PKGS[I]}" >&2
+            echo "expected: ${CHECKSUMS[I]}" >&2
+            echo "actual:   ${CHECKSUM}" >&2
             return 1
         fi
     done
