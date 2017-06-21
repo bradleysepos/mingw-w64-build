@@ -423,7 +423,8 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # done
     echo "bin: ${MINGW_W64_DIR}/bin"
-    echo "  add to your shell startup script (usually .bashrc or .bash_profile):"
+    echo "  run the following command and add it to your shell startup script"
+    echo "  (e.g., .bashrc or .bash_profile) to make persistent across sessions:"
     echo "    export PATH=\"${MINGW_W64_DIR}/bin:\${PATH}\""
     echo "complete."
     return 0
