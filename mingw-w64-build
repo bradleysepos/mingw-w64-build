@@ -1,8 +1,9 @@
 #!/bin/bash
 # mingw-w64-build - download and build mingw-w64 toolchain
 #
-# Project: https://github.com/bradleysepos/mingw-w64-build
-# License: MIT
+# Copyright 2017 Bradley Sepos
+# Released under the MIT License. See LICENSE for details.
+# https://github.com/bradleysepos/mingw-w64-build
 
 # checks for required external tools
 function check_dependencies {  # check_dependencies $DEP1 $DEP2 ...
