@@ -343,6 +343,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # binutils
     echo "  binutils ${BINUTILS_VER}"
+    touch "${BUILD_DIR}/binutils.log"
     mkdir -pv "${BUILD_DIR}/binutils" > "${BUILD_DIR}/binutils.log" 2>&1 || return 1
     cd "${BUILD_DIR}/binutils"
     "${SOURCE_DIR}/binutils/binutils-${BINUTILS_VER}/configure" CC=gcc CXX=g++ --build="${SYS_TYPE}" --target="${TARGET}" --with-sysroot="${MINGW_W64_DIR}" --prefix="${MINGW_W64_DIR}" --disable-multilib --disable-werror --disable-shared --enable-static >> "${BUILD_DIR}/binutils.log" 2>&1 || return 1
@@ -354,6 +355,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # mingw-w64 headers
     echo "  mingw-w64 ${MINGW_W64_VER} headers"
+    touch "${BUILD_DIR}/mingw-w64-headers.log"
     mkdir -pv "${BUILD_DIR}/mingw-w64-headers" > "${BUILD_DIR}/mingw-w64-headers.log" 2>&1 || return 1
     cd "${BUILD_DIR}/mingw-w64-headers"
     "${SOURCE_DIR}/mingw-w64/mingw-w64-v${MINGW_W64_VER}/mingw-w64-headers/configure" --build="${SYS_TYPE}" --host="${TARGET}" --prefix="${MINGW_W64_DIR}" >> "${BUILD_DIR}/mingw-w64-headers.log" 2>&1 || return 1
@@ -378,6 +380,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # gmp
     echo "  gmp ${GMP_VER}"
+    touch "${BUILD_DIR}/gmp.log"
     local GMP_DIR
     GMP_DIR="${BUILD_DIR}/gmp-${GMP_VER}-${SYS_ARCH}"
     mkdir -pv "${BUILD_DIR}/gmp" > "${BUILD_DIR}/gmp.log" 2>&1 || return 1
@@ -389,6 +392,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # mpfr
     echo "  mpfr ${MPFR_VER}"
+    touch "${BUILD_DIR}/mpfr.log"
     local MPFR_DIR
     MPFR_DIR="${BUILD_DIR}/mpfr-${MPFR_VER}-${SYS_ARCH}"
     mkdir -pv "${BUILD_DIR}/mpfr" > "${BUILD_DIR}/mpfr.log" 2>&1 || return 1
@@ -399,6 +403,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # mpc
     echo "  mpc ${MPC_VER}"
+    touch "${BUILD_DIR}/mpc.log"
     local MPC_DIR
     MPC_DIR="${BUILD_DIR}/mpc-${MPC_VER}-${SYS_ARCH}"
     mkdir -pv "${BUILD_DIR}/mpc" > "${BUILD_DIR}/mpc.log" 2>&1 || return 1
@@ -409,6 +414,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # isl
     echo "  isl ${ISL_VER}"
+    touch "${BUILD_DIR}/isl.log"
     local ISL_DIR
     ISL_DIR="${BUILD_DIR}/isl-${ISL_VER}-${SYS_ARCH}"
     mkdir -pv "${BUILD_DIR}/isl" > "${BUILD_DIR}/isl.log" 2>&1 || return 1
@@ -419,6 +425,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # gcc compilers
     echo "  gcc ${GCC_VER} compilers"
+    touch "${BUILD_DIR}/gcc.log"
     local GCC_CONFIG_EXTRA
     GCC_CONFIG_EXTRA=()
     if [[ "${SYS_NAME}" == "darwin" ]]; then
@@ -431,9 +438,10 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     make install-gcc >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
 
     # mingw-w64 runtime
+    echo "  mingw-w64 ${MINGW_W64_VER} runtime"
+    touch "${BUILD_DIR}/mingw-w64-crt.log"
     export CC=""
     export CXX=""
-    echo "  mingw-w64 ${MINGW_W64_VER} runtime"
     local MINGW_W64_CONFIG_EXTRA
     MINGW_W64_CONFIG_EXTRA=()
     if [[ "${TARGET}" == "${TARGET_i686}" ]]; then
@@ -456,6 +464,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # gcc libraries
     echo "  gcc ${GCC_VER} libraries"
+    touch "${BUILD_DIR}/gcc.log"
     cd "${BUILD_DIR}/gcc"
     make -j "${CPU_COUNT}" all-target-libgcc >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
     make -j "${CPU_COUNT}" install-target-libgcc >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
