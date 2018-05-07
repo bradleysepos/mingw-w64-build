@@ -72,6 +72,24 @@ function download_url {  # download_url $VERBOSE $FILE $URLS
     done
 }
 
+# prints continuous output to avoid timeouts on build systems like Travis
+function display_progress {
+    local str=""
+    while [ "$(ps a | awk '{print $1}' | grep ${1})" ]; do
+        printf "%c" "$str"
+        sleep 1
+        str="."
+    done
+}
+
+# kills child processes
+function die_gracefully {
+    trap - EXIT INT
+    trap ":" INT  # prevent recursion due to spamming ctrl-c
+    echo ""
+    trap - TERM && kill -- -$$
+}
+
 # builds mingw-w64
 function mingw-w64-build {  # mingw-w64-build $TARGET_PARAM $TARGET_DIR
     set -o pipefail
@@ -459,4 +477,13 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     set +o pipefail
 }
 
-mingw-w64-build "${@}"
+trap die_gracefully EXIT INT TERM
+
+mingw-w64-build "${@}" &
+PID=$!
+display_progress "${PID}"
+wait "${PID}" || CODE=$?
+
+trap - EXIT INT TERM
+
+exit "${CODE:-0}"
