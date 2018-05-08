@@ -344,7 +344,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # binutils
     echo -en "${CREL}"
-    printf "Building   [%02i/%02i] %s " "1" "${TOTAL}" "binutils ${BINUTILS_VER}"
+    printf "Building    [%02i/%02i] %s " "1" "${TOTAL}" "binutils ${BINUTILS_VER}"
     touch "${BUILD_DIR}/binutils.log"
     mkdir -pv "${BUILD_DIR}/binutils" > "${BUILD_DIR}/binutils.log" 2>&1 || return 1
     cd "${BUILD_DIR}/binutils"
@@ -357,7 +357,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # mingw-w64 headers
     echo -en "${CREL}"
-    printf "Building   [%02i/%02i] %s " "2" "${TOTAL}" "mingw-w64 ${MINGW_W64_VER} headers"
+    printf "Building    [%02i/%02i] %s " "2" "${TOTAL}" "mingw-w64 ${MINGW_W64_VER} headers"
     touch "${BUILD_DIR}/mingw-w64-headers.log"
     mkdir -pv "${BUILD_DIR}/mingw-w64-headers" > "${BUILD_DIR}/mingw-w64-headers.log" 2>&1 || return 1
     cd "${BUILD_DIR}/mingw-w64-headers"
@@ -383,7 +383,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # gmp
     echo -en "${CREL}"
-    printf "Building   [%02i/%02i] %s " "3" "${TOTAL}" "gmp ${GMP_VER}"
+    printf "Building    [%02i/%02i] %s " "3" "${TOTAL}" "gmp ${GMP_VER}"
     touch "${BUILD_DIR}/gmp.log"
     local GMP_DIR
     GMP_DIR="${BUILD_DIR}/gmp-${GMP_VER}-${SYS_ARCH}"
@@ -396,7 +396,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # mpfr
     echo -en "${CREL}"
-    printf "Building   [%02i/%02i] %s " "4" "${TOTAL}" "mpfr ${MPFR_VER}"
+    printf "Building    [%02i/%02i] %s " "4" "${TOTAL}" "mpfr ${MPFR_VER}"
     touch "${BUILD_DIR}/mpfr.log"
     local MPFR_DIR
     MPFR_DIR="${BUILD_DIR}/mpfr-${MPFR_VER}-${SYS_ARCH}"
@@ -408,7 +408,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # mpc
     echo -en "${CREL}"
-    printf "Building   [%02i/%02i] %s " "5" "${TOTAL}" "mpc ${MPC_VER}"
+    printf "Building    [%02i/%02i] %s " "5" "${TOTAL}" "mpc ${MPC_VER}"
     touch "${BUILD_DIR}/mpc.log"
     local MPC_DIR
     MPC_DIR="${BUILD_DIR}/mpc-${MPC_VER}-${SYS_ARCH}"
@@ -420,7 +420,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # isl
     echo -en "${CREL}"
-    printf "Building   [%02i/%02i] %s " "6" "${TOTAL}" "isl ${ISL_VER}"
+    printf "Building    [%02i/%02i] %s " "6" "${TOTAL}" "isl ${ISL_VER}"
     touch "${BUILD_DIR}/isl.log"
     local ISL_DIR
     ISL_DIR="${BUILD_DIR}/isl-${ISL_VER}-${SYS_ARCH}"
@@ -432,7 +432,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # gcc compilers
     echo -en "${CREL}"
-    printf "Building   [%02i/%02i] %s " "7" "${TOTAL}" "gcc ${GCC_VER} compilers"
+    printf "Building    [%02i/%02i] %s " "7" "${TOTAL}" "gcc ${GCC_VER} compilers"
     touch "${BUILD_DIR}/gcc.log"
     local GCC_CONFIG_EXTRA
     GCC_CONFIG_EXTRA=()
@@ -447,7 +447,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # mingw-w64 runtime
     echo -en "${CREL}"
-    printf "Building   [%02i/%02i] %s " "8" "${TOTAL}" "mingw-w64 ${MINGW_W64_VER} runtime"
+    printf "Building    [%02i/%02i] %s " "8" "${TOTAL}" "mingw-w64 ${MINGW_W64_VER} runtime"
     touch "${BUILD_DIR}/mingw-w64-crt.log"
     export CC=""
     export CXX=""
@@ -473,7 +473,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # gcc libraries
     echo -en "${CREL}"
-    printf "Building   [%02i/%02i] %s " "9" "${TOTAL}" "gcc ${GCC_VER} libraries"
+    printf "Building    [%02i/%02i] %s " "9" "${TOTAL}" "gcc ${GCC_VER} libraries"
     touch "${BUILD_DIR}/gcc.log"
     cd "${BUILD_DIR}/gcc"
     make -j "${CPU_COUNT}" all-target-libgcc >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
