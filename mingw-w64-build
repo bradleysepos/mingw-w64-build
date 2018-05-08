@@ -225,26 +225,20 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     BUILD_DIR="${TARGET_DIR}/build-${PREFIX}"
     case "${TARGET_PARAM}" in
         i686.clean|x86_64.clean)
-            echo "clean:"
-            echo "  rm -rf \"${BUILD_DIR}\""
-            echo "  rm -rf \"${SOURCE_DIR}\""
+            echo "rm -rf \"${BUILD_DIR}\" "
+            echo "rm -rf \"${SOURCE_DIR}\" "
             rm -rf "${BUILD_DIR}"
             rm -rf "${SOURCE_DIR}"
-            echo "complete."
             return 0
             ;;
         i686.distclean|x86_64.distclean)
-            echo "distclean:"
-            echo "  rm -rf \"${MINGW_W64_DIR}\""
+            echo "rm -rf \"${MINGW_W64_DIR}\" "
             rm -rf "${MINGW_W64_DIR}"
-            echo "complete."
             return 0
             ;;
         pkgclean)
-            echo "pkgclean:"
-            echo "  rm -rf \"${PKG_DIR}\""
+            echo "rm -rf \"${PKG_DIR}\" "
             rm -rf "${PKG_DIR}"
-            echo "complete."
             return 0
             ;;
     esac
