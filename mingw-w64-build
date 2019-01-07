@@ -518,4 +518,9 @@ wait "${PID}" || CODE=$?
 
 trap - EXIT INT TERM
 
-exit "${CODE:-0}"
+if [[ "${CODE}" -ne 0 ]]; then
+    echo "error: subprocess returned non-zero error code (${CODE})" >&2
+    echo "logs and temporary files may exist at ${2:-$HOME/toolchains}" >&2
+    exit 1
+fi
+exit 0
