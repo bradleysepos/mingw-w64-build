@@ -119,7 +119,7 @@ function mingw-w64-build {  # mingw-w64-build $TARGET_PARAM $TARGET_DIR
     fi
 
     # package names
-    local CONFIG_NAME BINUTILS_NAME MINGW_W64_NAME GMP_NAME MPFR_NAME MPC_NAME ISL_NAME GCC_NAME NAMES
+    local CONFIG_NAME BINUTILS_NAME MINGW_W64_NAME GMP_NAME MPFR_NAME MPC_NAME ISL_NAME GCC_NAME GDB_NAME NAMES
     CONFIG_NAME="config"
     BINUTILS_NAME="binutils"
     MINGW_W64_NAME="mingw-w64"
@@ -128,10 +128,11 @@ function mingw-w64-build {  # mingw-w64-build $TARGET_PARAM $TARGET_DIR
     MPC_NAME="mpc"
     ISL_NAME="isl"
     GCC_NAME="gcc"
-    NAMES=("${CONFIG_NAME}" "${BINUTILS_NAME}" "${MINGW_W64_NAME}" "${GMP_NAME}" "${MPFR_NAME}" "${MPC_NAME}" "${ISL_NAME}" "${GCC_NAME}")
+    GDB_NAME="gdb"
+    NAMES=("${CONFIG_NAME}" "${BINUTILS_NAME}" "${MINGW_W64_NAME}" "${GMP_NAME}" "${MPFR_NAME}" "${MPC_NAME}" "${ISL_NAME}" "${GCC_NAME}" "${GDB_NAME}")
 
     # versions
-    local CONFIG_VER BINUTILS_VER MINGW_W64_VER GMP_VER MPFR_VER MPC_VER ISL_VER GCC_VER
+    local CONFIG_VER BINUTILS_VER MINGW_W64_VER GMP_VER MPFR_VER MPC_VER ISL_VER GCC_VER GDB_VER
     CONFIG_VER="5fe51ff"  # config.guess 2019-01-03
     BINUTILS_VER="2.31.1"
     MINGW_W64_VER="6.0.0"
@@ -140,10 +141,11 @@ function mingw-w64-build {  # mingw-w64-build $TARGET_PARAM $TARGET_DIR
     MPC_VER="1.1.0"
     ISL_VER="0.19"
     GCC_VER="8.2.0"
-    VERSIONS=("${CONFIG_VER}" "${BINUTILS_VER}" "${MINGW_W64_VER}" "${GMP_VER}" "${MPFR_VER}" "${MPC_VER}" "${ISL_VER}" "${GCC_VER}")
+    GDB_VER="8.2.1"
+    VERSIONS=("${CONFIG_VER}" "${BINUTILS_VER}" "${MINGW_W64_VER}" "${GMP_VER}" "${MPFR_VER}" "${MPC_VER}" "${ISL_VER}" "${GCC_VER}" "${GDB_VER}")
 
     # filenames
-    local CONFIG_PKG BINUTILS_PKG MINGW_W64_PKG GMP_PKG MPFR_PKG MPC_PKG ISL_PKG GCC_PKG PKGS
+    local CONFIG_PKG BINUTILS_PKG MINGW_W64_PKG GMP_PKG MPFR_PKG MPC_PKG ISL_PKG GCC_PKG GDB_PKG PKGS
     CONFIG_PKG="config-${CONFIG_VER}.tar.gz"
     BINUTILS_PKG="binutils-${BINUTILS_VER}.tar.bz2"
     MINGW_W64_PKG="mingw-w64-v${MINGW_W64_VER}.tar.bz2"
@@ -152,10 +154,11 @@ function mingw-w64-build {  # mingw-w64-build $TARGET_PARAM $TARGET_DIR
     MPC_PKG="mpc-${MPC_VER}.tar.gz"
     ISL_PKG="isl-${ISL_VER}.tar.bz2"
     GCC_PKG="gcc-${GCC_VER}.tar.gz"
-    PKGS=("${CONFIG_PKG}" "${BINUTILS_PKG}" "${MINGW_W64_PKG}" "${GMP_PKG}" "${MPFR_PKG}" "${MPC_PKG}" "${ISL_PKG}" "${GCC_PKG}")
+    GDB_PKG="gdb-${GDB_VER}.tar.gz"
+    PKGS=("${CONFIG_PKG}" "${BINUTILS_PKG}" "${MINGW_W64_PKG}" "${GMP_PKG}" "${MPFR_PKG}" "${MPC_PKG}" "${ISL_PKG}" "${GCC_PKG}" "${GDB_PKG}")
 
     # urls
-    local CONFIG_URLS BINUTILS_URLS MINGW_W64_URLS GMP_URLS MPFR_URLS MPC_URLS ISL_URLS GCC_URLS URLS_VARNAMES
+    local CONFIG_URLS BINUTILS_URLS MINGW_W64_URLS GMP_URLS MPFR_URLS MPC_URLS ISL_URLS GCC_URLS GDB_URLS URLS_VARNAMES
     CONFIG_URLS=("https://git.savannah.gnu.org/gitweb/?p=config.git;a=snapshot;h=${CONFIG_VER};sf=tgz")
     BINUTILS_URLS=("https://ftp.gnu.org/gnu/binutils/binutils-${BINUTILS_VER}.tar.bz2")
     MINGW_W64_URLS=("http://downloads.sourceforge.net/project/mingw-w64/mingw-w64/mingw-w64-release/mingw-w64-v${MINGW_W64_VER}.tar.bz2")
@@ -164,10 +167,11 @@ function mingw-w64-build {  # mingw-w64-build $TARGET_PARAM $TARGET_DIR
     MPC_URLS=("https://ftp.gnu.org/gnu/mpc/mpc-${MPC_VER}.tar.gz")
     ISL_URLS=("http://isl.gforge.inria.fr/isl-${ISL_VER}.tar.bz2")
     GCC_URLS=("https://ftp.gnu.org/gnu/gcc/gcc-${GCC_VER}/gcc-${GCC_VER}.tar.gz")
-    URLS_VARNAMES=('CONFIG_URLS' 'BINUTILS_URLS' 'MINGW_W64_URLS' 'GMP_URLS' 'MPFR_URLS' 'MPC_URLS' 'ISL_URLS' 'GCC_URLS')
+    GDB_URLS=("https://ftp.gnu.org/gnu/gdb/gdb-${GDB_VER}.tar.gz")
+    URLS_VARNAMES=('CONFIG_URLS' 'BINUTILS_URLS' 'MINGW_W64_URLS' 'GMP_URLS' 'MPFR_URLS' 'MPC_URLS' 'ISL_URLS' 'GCC_URLS' 'GDB_URLS')
 
     # checksums
-    local CONFIG_SHA256 BINUTILS_SHA256 MINGW_W64_SHA256 GMP_SHA256 MPFR_SHA256 MPC_SHA256 ISL_SHA256 GCC_SHA256 CHECKSUMS
+    local CONFIG_SHA256 BINUTILS_SHA256 MINGW_W64_SHA256 GMP_SHA256 MPFR_SHA256 MPC_SHA256 ISL_SHA256 GCC_SHA256 GDB_SHA256 CHECKSUMS
     CONFIG_SHA256="6ba0228df0895f24c6cf61679c684a179db071384e12b07f8b1c84c2c180bf0a"
     BINUTILS_SHA256="ffcc382695bf947da6135e7436b8ed52d991cf270db897190f19d6f9838564d0"
     MINGW_W64_SHA256="805e11101e26d7897fce7d49cbb140d7bac15f3e085a91e0001e80b2adaf48f0"
@@ -176,7 +180,8 @@ function mingw-w64-build {  # mingw-w64-build $TARGET_PARAM $TARGET_DIR
     MPC_SHA256="6985c538143c1208dcb1ac42cedad6ff52e267b47e5f970183a3e75125b43c2e"
     ISL_SHA256="d59726f34f7852a081fbd3defd1ab2136f174110fc2e0c8d10bb122173fa9ed8"
     GCC_SHA256="1b0f36be1045ff58cbb9c83743835367b860810f17f0195a4e093458b372020f"
-    CHECKSUMS=("${CONFIG_SHA256}" "${BINUTILS_SHA256}" "${MINGW_W64_SHA256}" "${GMP_SHA256}" "${MPFR_SHA256}" "${MPC_SHA256}" "${ISL_SHA256}" "${GCC_SHA256}")
+    GDB_SHA256="0107985f1edb8dddef6cdd68a4f4e419f5fec0f488cc204f0b7d482c0c6c9282"
+    CHECKSUMS=("${CONFIG_SHA256}" "${BINUTILS_SHA256}" "${MINGW_W64_SHA256}" "${GMP_SHA256}" "${MPFR_SHA256}" "${MPC_SHA256}" "${ISL_SHA256}" "${GCC_SHA256}" "${GDB_SHA256}")
 
     # internal vars
     local NAME VERSION SELF SELF_NAME HELP
@@ -351,7 +356,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # build
     local TOTAL
-    TOTAL=10
+    TOTAL=11
     echo ""
     echo -n "Building "
 
@@ -503,6 +508,20 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     "${SOURCE_DIR}/mingw-w64/mingw-w64-v${MINGW_W64_VER}/mingw-w64-libraries/winpthreads/configure" --build="${SYS_TYPE}" --host="${TARGET}" --prefix="${MINGW_W64_DIR}" --disable-shared --enable-static >> "${BUILD_DIR}/winpthreads.log" 2>&1 || return 1
     make -j "${CPU_COUNT}" >> "${BUILD_DIR}/winpthreads.log" 2>&1 || return 1
     make install >> "${BUILD_DIR}/winpthreads.log" 2>&1 || return 1
+
+    # gdb
+    echo -en "${CREL}"
+    printf "Building    [%02i/%02i] %s " "11" "${TOTAL}" "gdb"
+    touch "${BUILD_DIR}/gdb.log"
+    mkdir -pv "${BUILD_DIR}/gdb" > "${BUILD_DIR}/gdb.log" 2>&1 || return 1
+    cd "${BUILD_DIR}/gdb"
+    # https://sourceware.org/bugzilla/show_bug.cgi?id=18113
+    echo '#!/bin/sh' > makeinfo
+    echo 'echo "makeinfo (GNU texinfo) 5.2"' >> makeinfo
+    chmod a+x makeinfo
+    "${SOURCE_DIR}/gdb/gdb-${GDB_VER}/configure" --build="${SYS_TYPE}" --host="${TARGET}" --prefix="${MINGW_W64_DIR}" --disable-shared --enable-static  MAKEINFO="${SOURCE_DIR}/mingw-w64/mingw-w64-v${MINGW_W64_VER}/mingw-w64-libraries/gdb/makeinfo" >> "${BUILD_DIR}/gdb.log" 2>&1 || return 1
+    make -j "${CPU_COUNT}" >> "${BUILD_DIR}/gdb.log" 2>&1 || return 1
+    make install >> "${BUILD_DIR}/gdb.log" 2>&1 || return 1
 
     # clean up
     cd "${MINGW_W64_DIR}"
