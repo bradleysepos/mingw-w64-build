@@ -23,8 +23,12 @@ Usage
 The basic syntax is:
 
 ```
-mingw-w64-build target [install-dir]
+mingw-w64-build [--disable-gdb] target [install-dir]
 ```
+
+Where:
+
+- `--disable-gdb` disable building GDB debugger
 
 Available targets:
 
