@@ -423,8 +423,10 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         fi
         mkdir -p "${SOURCE_DIR}/${NAMES[I]}"
         if ! tar -xf "${PKG_DIR}/${PKGS[I]}" -C "${SOURCE_DIR}/${NAMES[I]}" >/dev/null 2>&1; then
-            echo "unable to extract package: ${PKG_DIR}/${PKGS[I]}" >&2
-            return 1
+            if ! unzip -d "${SOURCE_DIR}/${NAMES[I]}" "${PKG_DIR}/${PKGS[I]}" >/dev/null 2>&1; then
+                echo "unable to extract package: ${PKG_DIR}/${PKGS[I]}" >&2
+                return 1
+            fi
         fi
     done
 
