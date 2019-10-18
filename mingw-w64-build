@@ -187,11 +187,14 @@ function mingw-w64-build {  # mingw-w64-build [args] $TARGET_PARAM $TARGET_DIR
     HELP="\
 usage: ${SELF_NAME} [-h | --help]
        ${SELF_NAME} [-v | --version]
+       ${SELF_NAME} [-l | --list]
        ${SELF_NAME} [-j # | --jobs #] [--disable-gdb] target [install-dir]
 where:
   -j, --jobs
         number of concurrent build jobs to run
         default: 0 (automatic)
+  -l, --list
+        list components and exit
   --disable-gdb
         disable building GDB debugger
 targets:
@@ -206,12 +209,13 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     CREL=$(echo -e "\r"$(tput el))
 
     # args
-    local JOBS DISABLE_GDB OPTIND OPTSPEC OPTARRAY
+    local JOBS LIST DISABLE_GDB OPTIND OPTSPEC OPTARRAY
     JOBS=0
+    LIST=false
     DISABLE_GDB=false
     OPTIND=1
-    OPTSPEC=":-:hvj:"
-    OPTARRAY=('-h' '--help' '-v' '--version' '-j' '--jobs' '--disable-gdb')  # all short and long options
+    OPTSPEC=":-:hvj:l"
+    OPTARRAY=('-h' '--help' '-v' '--version' '-j' '--jobs' '-l' '--list' '--disable-gdb')  # all short and long options
     while getopts "${OPTSPEC}" OPT; do
         case "${OPT}" in
             -)
@@ -261,6 +265,16 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
                             exit 1
                         fi
                         ;;
+                    list)
+                        # List components
+                        LIST=true
+                        ;;
+                    list=*)
+                        # Option with prohibited value
+                        echo "Option --${OPTARG%%=*} takes no value" >&2
+                        echo -e "${HELP}"
+                        return 1
+                        ;;
                     disable-gdb)
                         # Disable GDB
                         DISABLE_GDB=true
@@ -291,24 +305,53 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
                 if [[ ! "${JOBS}" =~ ^[0-9]*$ ]]; then
                     echo "Option -${OPT} requires a numeric value" >&2
                     echo -e "${HELP}"
-                    exit 1
+                    return 1
                 fi
+                ;;
+            l)
+                # List components
+                LIST=true
                 ;;
             :)
                 # Option without required value
                 echo "Option -${OPTARG} requires a value" >&2
                 echo -e "${HELP}"
-                exit 1
+                return 1
                 ;;
             \?)
                 # Invalid option specified
                 echo "Invalid option: -${OPTARG}" >&2
                 echo -e "${HELP}"
-                exit 1
+                return 1
                 ;;
         esac
     done
     shift $((OPTIND - 1))
+
+    # host
+    local SYS_NAME SYS_ARCH CPU_COUNT
+    SYS_NAME=$(uname | awk '{ print tolower($0)}')
+    SYS_ARCH=$(uname -m)
+    if [[ "${SYS_NAME}" == "darwin" ]]; then
+        CPU_COUNT=$(sysctl -n hw.activecpu 2>/dev/null)
+    elif [[ "${SYS_NAME}" == "linux" ]]; then
+        CPU_COUNT=$(grep -c processor /proc/cpuinfo 2>/dev/null)
+    fi
+    CPU_COUNT="${CPU_COUNT:-1}"
+
+    # begin
+    [[ "${JOBS}" -eq 0 ]] && JOBS="${CPU_COUNT}"
+    echo -n "${NAME} ${VERSION}"
+    echo " (${JOBS} job$([[ ${JOBS} -gt 1 ]] && echo 's'))"
+
+    # list components
+    if [[ "${LIST}" == true ]]; then
+        echo "Components:"
+        for I in "${!NAMES[@]}"; do
+            echo "  ${NAMES[$I]} ${VERSIONS[$I]}"
+        done
+        return 0
+    fi
 
     # target args
     local TARGET_PARAM TARGET_DIR
@@ -364,22 +407,6 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     if [[ "${TARGET_DIR:-}" == "" ]]; then
         TARGET_DIR="${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER}"
     fi
-
-    # host
-    local SYS_NAME SYS_ARCH CPU_COUNT
-    SYS_NAME=$(uname | awk '{ print tolower($0)}')
-    SYS_ARCH=$(uname -m)
-    if [[ "${SYS_NAME}" == "darwin" ]]; then
-        CPU_COUNT=$(sysctl -n hw.activecpu 2>/dev/null)
-    elif [[ "${SYS_NAME}" == "linux" ]]; then
-        CPU_COUNT=$(grep -c processor /proc/cpuinfo 2>/dev/null)
-    fi
-    CPU_COUNT="${CPU_COUNT:-1}"
-
-    # begin
-    [[ "${JOBS}" -eq 0 ]] && JOBS="${CPU_COUNT}"
-    echo -n "${NAME} ${VERSION}"
-    echo " (${JOBS} job$([[ ${JOBS} -gt 1 ]] && echo 's'))"
 
     # cleaning and directory creation
     local MINGW_W64_DIR PKG_DIR SOURCE_DIR BUILD_DIR
