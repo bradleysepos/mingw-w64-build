@@ -380,21 +380,18 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     fi
 
     # target args
-    local TARGET_PARAM TARGET_DIR
+    local TARGET_PARAM TARGET_DIR TARGET_i686 TARGET_x86_64 PREFIX_i686 PREFIX_x86_64 TARGET PREFIX
     TARGET_PARAM="${1}"
     TARGET_DIR="${2}"
+    TARGET_i686="i686-w64-mingw32"
+    TARGET_x86_64="x86_64-w64-mingw32"
+    PREFIX_i686="mingw-w64-i686"
+    PREFIX_x86_64="mingw-w64-x86_64"
     if [[ "${TARGET_PARAM:-}" == "" ]]; then
         echo -e "${HELP}"
         echo "no target specified" >&2
         return 1
     fi
-
-    # target and prefix
-    local TARGET_i686 TARGET_x86_64 PREFIX_i686 PREFIX_x86_64 TARGET PREFIX
-    TARGET_i686="i686-w64-mingw32"
-    TARGET_x86_64="x86_64-w64-mingw32"
-    PREFIX_i686="mingw-w64-i686"
-    PREFIX_x86_64="mingw-w64-x86_64"
     case "${TARGET_PARAM}" in
         i686|i686.clean|i686.distclean)
             TARGET="${TARGET_i686}"
@@ -414,8 +411,6 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         echo "target not valid: ${TARGET_PARAM}" >&2
         return 1
     fi
-
-    # target dir
     if [[ "${TARGET_DIR:-}" == "" ]]; then
         TARGET_DIR="${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER}"
     fi
