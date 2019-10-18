@@ -174,7 +174,7 @@ ${NAME} ${VERSION}
 usage: ${SELF_NAME} [-h | --help]
        ${SELF_NAME} [-l | --list]
        ${SELF_NAME} [-v | --version]
-       ${SELF_NAME} [-j # | --jobs #] [--disable-gdb] target [install-dir]
+       ${SELF_NAME} [-f | --force] [-j # | --jobs #] [--disable-gdb] target [install-dir]
 where:
   -h, --help
         display this help text
@@ -182,6 +182,8 @@ where:
         display components list
   -v, --version
         display version information
+  -f, --force
+        remove and replace existing target (overwrite)
   -j, --jobs
         number of concurrent build jobs to run
         default: 0 (automatic)
@@ -199,13 +201,14 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     CREL=$(echo -e "\r"$(tput el))
 
     # args
-    local JOBS LIST DISABLE_GDB OPTIND OPTSPEC OPTARRAY
+    local FORCE JOBS LIST DISABLE_GDB OPTIND OPTSPEC OPTARRAY
+    FORCE=false
     JOBS=0
     LIST=false
     DISABLE_GDB=false
     OPTIND=1
-    OPTSPEC=":-:hlvj:"
-    OPTARRAY=('-h' '--help' '-l' '--list' '-v' '--version' '-j' '--jobs' '--disable-gdb')  # all short and long options
+    OPTSPEC=":-:hlvfj:"
+    OPTARRAY=('-h' '--help' '-l' '--list' '-v' '--version' '--force' '-j' '--jobs' '--disable-gdb')  # all short and long options
     while getopts "${OPTSPEC}" OPT; do
         case "${OPT}" in
             -)
@@ -237,6 +240,16 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
                         # Print version and exit
                         echo -e "${NAME} ${VERSION}"
                         return 0
+                        ;;
+                    force)
+                        # Force remove and replace dist (overwrite)
+                        FORCE=true
+                        ;;
+                    force=*)
+                        # Option with prohibited value
+                        echo "Option --${OPTARG%%=*} takes no value" >&2
+                        echo -e "${HELP}"
+                        return 1
                         ;;
                     jobs)
                         # Number of jobs
@@ -290,6 +303,10 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
                 # Print version and exit
                 echo "${NAME} ${VERSION}"
                 return 0
+                ;;
+            f)
+                # Force remove and replace dist (overwrite)
+                FORCE=true
                 ;;
             j)
                 # Number of jobs
@@ -422,10 +439,14 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     SOURCE_DIR="${TARGET_DIR}/source"
     BUILD_DIR="${TARGET_DIR}/build-${PREFIX}"
     if [[ -e "${MINGW_W64_DIR}" ]]; then
-        # prefix dir should not exist
-        echo "unable to create directory (exists): ${MINGW_W64_DIR}" >&2
-        echo "remove with: ${SELF_NAME} ${TARGET_PARAM%%.*}.distclean${2:+ $2}" >&2
-        return 1
+        if [[ "${FORCE}" == true ]]; then
+            rm -rf "${MINGW_W64_DIR}"
+        else
+            # prefix dir should not exist
+            echo "unable to create directory (exists): ${MINGW_W64_DIR}" >&2
+            echo "remove with: ${SELF_NAME} ${TARGET_PARAM%%.*}.distclean${2:+ $2}" >&2
+            return 1
+        fi
     fi
     if [[ -e "${SOURCE_DIR}" ]]; then
         # never reuse source dir
