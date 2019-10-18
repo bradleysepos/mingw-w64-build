@@ -187,8 +187,11 @@ function mingw-w64-build {  # mingw-w64-build [args] $TARGET_PARAM $TARGET_DIR
     HELP="\
 usage: ${SELF_NAME} [-h | --help]
        ${SELF_NAME} [-v | --version]
-       ${SELF_NAME} [--disable-gdb] target [install-dir]
+       ${SELF_NAME} [-j # | --jobs #] [--disable-gdb] target [install-dir]
 where:
+  -j, --jobs
+        number of concurrent build jobs to run
+        default: 0 (automatic)
   --disable-gdb
         disable building GDB debugger
 targets:
@@ -203,11 +206,12 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     CREL=$(echo -e "\r"$(tput el))
 
     # args
-    local DISABLE_GDB OPTIND OPTSPEC OPTARRAY
+    local JOBS DISABLE_GDB OPTIND OPTSPEC OPTARRAY
+    JOBS=0
     DISABLE_GDB=false
     OPTIND=1
-    OPTSPEC=":-:hv"
-    OPTARRAY=('-h' '--help' '-v' '--version' '--disable-gdb')  # all short and long options
+    OPTSPEC=":-:hvj:"
+    OPTARRAY=('-h' '--help' '-v' '--version' '-j' '--jobs' '--disable-gdb')  # all short and long options
     while getopts "${OPTSPEC}" OPT; do
         case "${OPT}" in
             -)
@@ -232,6 +236,31 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
                         echo -e "${NAME} ${VERSION}"
                         exit 0
                         ;;
+                    jobs)
+                        # Number of jobs
+                        if [[ -z ${!OPTIND+isset} ]] || in_array "${!OPTIND}" "${OPTARRAY[@]}"; then
+                            # Option without required argument
+                            echo "Option --${OPTARG} requires a value" >&2
+                            echo -e "${HELP}"
+                            exit 1
+                        fi
+                        JOBS="${!OPTIND}"
+                        if [[ ! "${JOBS}" =~ ^[0-9]*$ ]]; then
+                            echo "Option --${OPTARG} requires a numeric value" >&2
+                            echo -e "${HELP}"
+                            exit 1
+                        fi
+                        OPTIND=$((OPTIND + 1))
+                        ;;
+                    jobs=*)
+                        # Number of jobs
+                        JOBS="${OPTARG#*=}"
+                        if [[ ! "${JOBS}" =~ ^[0-9]*$ ]]; then
+                            echo "Option --${OPTARG} requires a numeric value" >&2
+                            echo -e "${HELP}"
+                            exit 1
+                        fi
+                        ;;
                     disable-gdb)
                         # Disable GDB
                         DISABLE_GDB=true
@@ -255,6 +284,15 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
                 # Print version and exit
                 echo "${NAME} ${VERSION}"
                 exit 0
+                ;;
+            j)
+                # Number of jobs
+                JOBS="${OPTARG}"
+                if [[ ! "${JOBS}" =~ ^[0-9]*$ ]]; then
+                    echo "Option -${OPT} requires a numeric value" >&2
+                    echo -e "${HELP}"
+                    exit 1
+                fi
                 ;;
             :)
                 # Option without required value
@@ -327,6 +365,22 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         TARGET_DIR="${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER}"
     fi
 
+    # host
+    local SYS_NAME SYS_ARCH CPU_COUNT
+    SYS_NAME=$(uname | awk '{ print tolower($0)}')
+    SYS_ARCH=$(uname -m)
+    if [[ "${SYS_NAME}" == "darwin" ]]; then
+        CPU_COUNT=$(sysctl -n hw.ncpu 2>/dev/null)
+    elif [[ "${SYS_NAME}" == "linux" ]]; then
+        CPU_COUNT=$(grep -c processor /proc/cpuinfo 2>/dev/null)
+    fi
+    CPU_COUNT="${CPU_COUNT:-1}"
+
+    # begin
+    [[ "${JOBS}" -eq 0 ]] && JOBS="${CPU_COUNT}"
+    echo -n "${NAME} ${VERSION}"
+    echo " (${JOBS} job$([[ ${JOBS} -gt 1 ]] && echo 's'))"
+
     # cleaning and directory creation
     local MINGW_W64_DIR PKG_DIR SOURCE_DIR BUILD_DIR
     MINGW_W64_DIR="${TARGET_DIR}/${PREFIX}"
@@ -391,6 +445,10 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         fi
     done
 
+    # host system type
+    local SYS_TYPE
+    SYS_TYPE=$("${SOURCE_DIR}/config/config-${CONFIG_VER}/config.guess")
+
     # additional directory creation
     mkdir -p "${MINGW_W64_DIR}"
     if [[ ! -d "${MINGW_W64_DIR}" ]]; then
@@ -430,18 +488,6 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         fi
     done
 
-    # host
-    local SYS_NAME SYS_ARCH SYS_TYPE CPU_COUNT
-    SYS_NAME=$(uname | awk '{ print tolower($0)}')
-    SYS_ARCH=$(uname -m)
-    SYS_TYPE=$("${SOURCE_DIR}/config/config-${CONFIG_VER}/config.guess")
-    if [[ "${SYS_NAME}" == "darwin" ]]; then
-        CPU_COUNT=$(sysctl -n hw.ncpu 2>/dev/null)
-    elif [[ "${SYS_NAME}" == "linux" ]]; then
-        CPU_COUNT=$(grep -c processor /proc/cpuinfo 2>/dev/null)
-    fi
-    CPU_COUNT="${CPU_COUNT:-1}"
-
     # build
     local TOTAL
     TOTAL=11
@@ -458,7 +504,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     mkdir -pv "${BUILD_DIR}/binutils" > "${BUILD_DIR}/binutils.log" 2>&1 || return 1
     cd "${BUILD_DIR}/binutils"
     "${SOURCE_DIR}/binutils/binutils-${BINUTILS_VER}/configure" CC=gcc CXX=g++ --build="${SYS_TYPE}" --target="${TARGET}" --with-sysroot="${MINGW_W64_DIR}" --prefix="${MINGW_W64_DIR}" --disable-multilib --disable-werror --disable-shared --enable-static >> "${BUILD_DIR}/binutils.log" 2>&1 || return 1
-    make -j "${CPU_COUNT}" >> "${BUILD_DIR}/binutils.log" 2>&1 || return 1
+    make -j "${JOBS}" >> "${BUILD_DIR}/binutils.log" 2>&1 || return 1
     make install-strip >> "${BUILD_DIR}/binutils.log" 2>&1 || return 1
 
     # update PATH
@@ -499,7 +545,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     mkdir -pv "${BUILD_DIR}/gmp" > "${BUILD_DIR}/gmp.log" 2>&1 || return 1
     cd "${BUILD_DIR}/gmp"
     "${SOURCE_DIR}/gmp/gmp-${GMP_VER}/configure" CC=gcc CXX=g++ CPPFLAGS=-fexceptions --build="${SYS_TYPE}" --prefix="${GMP_DIR}" --enable-cxx --disable-shared --enable-static >> "${BUILD_DIR}/gmp.log" 2>&1 || return 1
-    make -j "${CPU_COUNT}" >> "${BUILD_DIR}/gmp.log" 2>&1 || return 1
+    make -j "${JOBS}" >> "${BUILD_DIR}/gmp.log" 2>&1 || return 1
     make check >> "${BUILD_DIR}/gmp.log" 2>&1 || return 1
     make install >> "${BUILD_DIR}/gmp.log" 2>&1 || return 1
 
@@ -512,7 +558,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     mkdir -pv "${BUILD_DIR}/mpfr" > "${BUILD_DIR}/mpfr.log" 2>&1 || return 1
     cd "${BUILD_DIR}/mpfr"
     "${SOURCE_DIR}/mpfr/mpfr-${MPFR_VER}/configure" CC=gcc CXX=g++ CFLAGS="-I${GMP_DIR}/include" CPPFLAGS="-I${GMP_DIR}/include" LDFLAGS="-L${GMP_DIR}/lib" --build="${SYS_TYPE}" --prefix="${MPFR_DIR}" --with-gmp="${GMP_DIR}" --disable-shared --enable-static >> "${BUILD_DIR}/mpfr.log" 2>&1 || return 1
-    make -j "${CPU_COUNT}" >> "${BUILD_DIR}/mpfr.log" 2>&1 || return 1
+    make -j "${JOBS}" >> "${BUILD_DIR}/mpfr.log" 2>&1 || return 1
     make install >> "${BUILD_DIR}/mpfr.log" 2>&1 || return 1
 
     # mpc
@@ -524,7 +570,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     mkdir -pv "${BUILD_DIR}/mpc" > "${BUILD_DIR}/mpc.log" 2>&1 || return 1
     cd "${BUILD_DIR}/mpc"
     "${SOURCE_DIR}/mpc/mpc-${MPC_VER}/configure" CC=gcc CXX=g++ CFLAGS="-I${GMP_DIR}/include -I${MPFR_DIR}/include" CPPFLAGS="-I${GMP_DIR}/include -I${MPFR_DIR}/include" LDFLAGS="-L${GMP_DIR}/lib -L${MPFR_DIR}/lib" --build="${SYS_TYPE}" --prefix="${MPC_DIR}" --with-gmp="${GMP_DIR}" --with-mpfr="${MPFR_DIR}" --disable-shared --enable-static >> "${BUILD_DIR}/mpc.log" 2>&1 || return 1
-    make -j "${CPU_COUNT}" >> "${BUILD_DIR}/mpc.log" 2>&1 || return 1
+    make -j "${JOBS}" >> "${BUILD_DIR}/mpc.log" 2>&1 || return 1
     make install >> "${BUILD_DIR}/mpc.log" 2>&1 || return 1
 
     # isl
@@ -536,7 +582,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     mkdir -pv "${BUILD_DIR}/isl" > "${BUILD_DIR}/isl.log" 2>&1 || return 1
     cd "${BUILD_DIR}/isl"
     "${SOURCE_DIR}/isl/isl-${ISL_VER}/configure" CC=gcc CXX=g++ CFLAGS="-I${GMP_DIR}/include" CPPFLAGS="-I${GMP_DIR}/include" LDFLAGS="-L${GMP_DIR}/lib" --build="${SYS_TYPE}" --prefix="${ISL_DIR}" --with-gmp="${GMP_DIR}" --disable-shared --enable-static >> "${BUILD_DIR}/isl.log" 2>&1 || return 1
-    make -j "${CPU_COUNT}" >> "${BUILD_DIR}/isl.log" 2>&1 || return 1
+    make -j "${JOBS}" >> "${BUILD_DIR}/isl.log" 2>&1 || return 1
     make install >> "${BUILD_DIR}/isl.log" 2>&1 || return 1
 
     # gcc compilers
@@ -551,7 +597,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     mkdir -pv "${BUILD_DIR}/gcc" > "${BUILD_DIR}/gcc.log" 2>&1 || return 1
     cd "${BUILD_DIR}/gcc"
     "${SOURCE_DIR}/gcc/gcc-${GCC_VER}/configure" CFLAGS="-I${GMP_DIR}/include -I${MPFR_DIR}/include -I${MPC_DIR}/include -I${ISL_DIR}/include" CPPFLAGS="-I${GMP_DIR}/include -I${MPFR_DIR}/include -I${MPC_DIR}/include -I${ISL_DIR}/include" LDFLAGS="-L${GMP_DIR}/lib -L${MPFR_DIR}/lib -L${MPC_DIR}/lib -L${ISL_DIR}/lib" --build="${SYS_TYPE}" --host="${SYS_TYPE}" --target="${TARGET}" --prefix="${MINGW_W64_DIR}" --with-sysroot="${MINGW_W64_DIR}" --with-gmp="${GMP_DIR}" --with-mpfr="${MPFR_DIR}" --with-mpc="${MPC_DIR}" --with-isl="${ISL_DIR}" --disable-multilib --disable-nls --disable-libstdcxx-pch --disable-win32-registry --enable-checking=release --enable-languages=c,c++ --enable-lto --disable-shared --enable-static "${GCC_CONFIG_EXTRA[@]}" >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
-    make -j "${CPU_COUNT}" all-gcc >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
+    make -j "${JOBS}" all-gcc >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
     make install-gcc >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
 
     # mingw-w64 runtime
@@ -570,7 +616,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     mkdir -pv "${BUILD_DIR}/mingw-w64-crt" > "${BUILD_DIR}/mingw-w64-crt.log" 2>&1 || return 1
     cd "${BUILD_DIR}/mingw-w64-crt"
     "${SOURCE_DIR}/mingw-w64/mingw-w64-v${MINGW_W64_VER}/mingw-w64-crt/configure" --build="${SYS_TYPE}" --host="${TARGET}" --prefix="${MINGW_W64_DIR}" --with-sysroot="${MINGW_W64_DIR}" "${MINGW_W64_CONFIG_EXTRA[@]}" >> "${BUILD_DIR}/mingw-w64-crt.log" 2>&1 || return 1
-    make -j "${CPU_COUNT}" >> "${BUILD_DIR}/mingw-w64-crt.log" 2>&1 || return 1
+    make -j "${JOBS}" >> "${BUILD_DIR}/mingw-w64-crt.log" 2>&1 || return 1
     make install-strip >> "${BUILD_DIR}/mingw-w64-crt.log" 2>&1 || return 1
 
     # relocate and symlink libs
@@ -585,9 +631,9 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     printf "Building    [%02i/%02i] %s " "9" "${TOTAL}" "gcc ${GCC_VER} libraries"
     touch "${BUILD_DIR}/gcc.log"
     cd "${BUILD_DIR}/gcc"
-    make -j "${CPU_COUNT}" all-target-libgcc >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
-    make -j "${CPU_COUNT}" install-target-libgcc >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
-    make -j "${CPU_COUNT}" >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
+    make -j "${JOBS}" all-target-libgcc >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
+    make -j "${JOBS}" install-target-libgcc >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
+    make -j "${JOBS}" >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
     make install-strip >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
 
     # winpthreads
@@ -597,7 +643,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     mkdir -pv "${BUILD_DIR}/winpthreads" > "${BUILD_DIR}/winpthreads.log" 2>&1 || return 1
     cd "${BUILD_DIR}/winpthreads"
     "${SOURCE_DIR}/mingw-w64/mingw-w64-v${MINGW_W64_VER}/mingw-w64-libraries/winpthreads/configure" --build="${SYS_TYPE}" --host="${TARGET}" --prefix="${MINGW_W64_DIR}" --disable-shared --enable-static >> "${BUILD_DIR}/winpthreads.log" 2>&1 || return 1
-    make -j "${CPU_COUNT}" >> "${BUILD_DIR}/winpthreads.log" 2>&1 || return 1
+    make -j "${JOBS}" >> "${BUILD_DIR}/winpthreads.log" 2>&1 || return 1
     make install >> "${BUILD_DIR}/winpthreads.log" 2>&1 || return 1
 
     # gdb
@@ -612,7 +658,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         echo 'echo "makeinfo (GNU texinfo) 5.2"' >> makeinfo
         chmod a+x makeinfo
         "${SOURCE_DIR}/gdb/gdb-${GDB_VER}/configure" --build="${SYS_TYPE}" --host="${TARGET}" --prefix="${MINGW_W64_DIR}" --disable-shared --enable-static MAKEINFO="${BUILD_DIR}/gdb/makeinfo" >> "${BUILD_DIR}/gdb.log" 2>&1 || return 1
-        make -j "${CPU_COUNT}" >> "${BUILD_DIR}/gdb.log" 2>&1 || return 1
+        make -j "${JOBS}" >> "${BUILD_DIR}/gdb.log" 2>&1 || return 1
         make install >> "${BUILD_DIR}/gdb.log" 2>&1 || return 1
     fi
 
