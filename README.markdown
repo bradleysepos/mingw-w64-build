@@ -62,7 +62,7 @@ mingw-w64-build i686.distclean && mingw-w64-build x86_64.distclean
 Full usage:
 
 ```
-mingw-w64-build -h
+mingw-w64-build --help
 ```
 
 
