@@ -370,7 +370,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     SYS_NAME=$(uname | awk '{ print tolower($0)}')
     SYS_ARCH=$(uname -m)
     if [[ "${SYS_NAME}" == "darwin" ]]; then
-        CPU_COUNT=$(sysctl -n hw.ncpu 2>/dev/null)
+        CPU_COUNT=$(sysctl -n hw.activecpu 2>/dev/null)
     elif [[ "${SYS_NAME}" == "linux" ]]; then
         CPU_COUNT=$(grep -c processor /proc/cpuinfo 2>/dev/null)
     fi
