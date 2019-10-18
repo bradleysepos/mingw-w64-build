@@ -461,24 +461,28 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     esac
 
     # remove non-reusable directories
-    if [[ -e "${MINGW_W64_DIR}" ]]; then
-        if [[ "${FORCE}" == true ]]; then
-            rm -rf "${MINGW_W64_DIR}"
-        else
-            # prefix dir should not exist
-            echo "unable to create directory (exists): ${MINGW_W64_DIR}" >&2
-            echo "remove with: ${SELF_NAME} ${TARGET_PARAM%%.*}.distclean${2:+ $2}" >&2
-            return 1
-        fi
+    local CLEAN_INDEX CLEAN_TOTAL
+    CLEAN_INDEX=0
+    CLEAN_TOTAL=2
+    if [[ "${FORCE}" == true ]]; then
+        CLEAN_INDEX=$((CLEAN_INDEX+1))
+        CLEAN_TOTAL=$((CLEAN_TOTAL+1))
+        printf "Cleaning    [%02i/%02i] dist " "${CLEAN_INDEX}" "${CLEAN_TOTAL}"
+        rm -rf "${MINGW_W64_DIR}"
+        echo -en "${CREL}"
+    elif [[ -e "${MINGW_W64_DIR}" ]]; then
+        # prefix dir should not exist
+        echo "unable to create directory (exists): ${MINGW_W64_DIR}" >&2
+        echo "remove with: ${SELF_NAME} ${TARGET_PARAM%%.*}.distclean${2:+ $2}" >&2
+        return 1
     fi
-    if [[ -e "${SOURCE_DIR}" ]]; then
-        # never reuse source dir
-        rm -rf "${SOURCE_DIR}"
-    fi
-    if [[ -e "${BUILD_DIR}" ]]; then
-        # never reuse build dir
-        rm -rf "${BUILD_DIR}"
-    fi
+    CLEAN_INDEX=$((CLEAN_INDEX+1))
+    printf "Cleaning    [%02i/%02i] source " "${CLEAN_INDEX}" "${CLEAN_TOTAL}"
+    rm -rf "${SOURCE_DIR}"
+    CLEAN_INDEX=$((CLEAN_INDEX+1))
+    echo -en "${CREL}"
+    printf "Cleaning    [%02i/%02i] build " "${CLEAN_INDEX}" "${CLEAN_TOTAL}"
+    rm -rf "${BUILD_DIR}"
 
     # create target directory
     mkdir -p "${TARGET_DIR}"
@@ -493,6 +497,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         echo "unable to create directory: ${PKG_DIR}" >&2
         return 1
     fi
+    echo ""
     echo -n "Downloading "
     local DOWNLOAD_VERBOSE I URLS_IREF URLS CHECKSUM
     DOWNLOAD_VERBOSE=false
