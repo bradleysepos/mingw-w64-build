@@ -186,15 +186,19 @@ function mingw-w64-build {  # mingw-w64-build [args] $TARGET_PARAM $TARGET_DIR
     SELF_NAME=$(basename "${SELF}")
     HELP="\
 usage: ${SELF_NAME} [-h | --help]
-       ${SELF_NAME} [-v | --version]
        ${SELF_NAME} [-l | --list]
+       ${SELF_NAME} [-v | --version]
        ${SELF_NAME} [-j # | --jobs #] [--disable-gdb] target [install-dir]
 where:
+  -h, --help
+        display this help text
+  -l, --list
+        display components list
+  -v, --version
+        display version information
   -j, --jobs
         number of concurrent build jobs to run
         default: 0 (automatic)
-  -l, --list
-        list components and exit
   --disable-gdb
         disable building GDB debugger
 targets:
@@ -214,8 +218,8 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     LIST=false
     DISABLE_GDB=false
     OPTIND=1
-    OPTSPEC=":-:hvj:l"
-    OPTARRAY=('-h' '--help' '-v' '--version' '-j' '--jobs' '-l' '--list' '--disable-gdb')  # all short and long options
+    OPTSPEC=":-:hlvj:"
+    OPTARRAY=('-h' '--help' '-l' '--list' '-v' '--version' '-j' '--jobs' '--disable-gdb')  # all short and long options
     while getopts "${OPTSPEC}" OPT; do
         case "${OPT}" in
             -)
@@ -229,6 +233,14 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
                         # Print help and exit
                         echo -e "${HELP}"
                         return 0
+                        ;;
+                    list)
+                        # List components
+                        LIST=true
+                        ;;
+                    list=*)
+                        # List components
+                        LIST=true
                         ;;
                     version)
                         # Print version and exit
@@ -265,16 +277,6 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
                             return 1
                         fi
                         ;;
-                    list)
-                        # List components
-                        LIST=true
-                        ;;
-                    list=*)
-                        # Option with prohibited value
-                        echo "Option --${OPTARG%%=*} takes no value" >&2
-                        echo -e "${HELP}"
-                        return 1
-                        ;;
                     disable-gdb)
                         # Disable GDB
                         DISABLE_GDB=true
@@ -294,6 +296,10 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
                 echo -e "${HELP}"
                 return 0
                 ;;
+            l)
+                # List components
+                LIST=true
+                ;;
             v)
                 # Print version and exit
                 echo "${NAME} ${VERSION}"
@@ -307,10 +313,6 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
                     echo -e "${HELP}"
                     return 1
                 fi
-                ;;
-            l)
-                # List components
-                LIST=true
                 ;;
             :)
                 # Option without required value
