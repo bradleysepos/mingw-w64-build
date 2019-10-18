@@ -331,6 +331,20 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     done
     shift $((OPTIND - 1))
 
+    # gdb?
+    if [[ "${DISABLE_GDB}" == false ]] || [[ "${LIST}" == true ]]; then
+        GDB_NAME="gdb"
+        NAMES+=("${GDB_NAME}")
+        GDB_VER="8.3.1"
+        VERSIONS+=("${GDB_VER}")
+        GDB_PKG="gdb-${GDB_VER}.tar.gz"
+        PKGS+=("${GDB_PKG}")
+        GDB_URLS=("https://ftp.gnu.org/gnu/gdb/gdb-${GDB_VER}.tar.gz")
+        URLS_VARNAMES+=('GDB_URLS')
+        GDB_SHA256="26ce655216cd03f4611518a7a1c31d80ec8e884c16715e9ba8b436822e51434b"
+        CHECKSUMS+=("${GDB_SHA256}")
+    fi
+
     # host
     local SYS_NAME SYS_ARCH CPU_COUNT
     SYS_NAME=$(uname | awk '{ print tolower($0)}')
@@ -399,20 +413,6 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         echo -e "${HELP}"
         echo "target not valid: ${TARGET_PARAM}" >&2
         return 1
-    fi
-
-    # gdb?
-    if [[ "${DISABLE_GDB}" == false ]]; then
-        GDB_NAME="gdb"
-        NAMES+=("${GDB_NAME}")
-        GDB_VER="8.3.1"
-        VERSIONS+=("${GDB_VER}")
-        GDB_PKG="gdb-${GDB_VER}.tar.gz"
-        PKGS+=("${GDB_PKG}")
-        GDB_URLS=("https://ftp.gnu.org/gnu/gdb/gdb-${GDB_VER}.tar.gz")
-        URLS_VARNAMES+=('GDB_URLS')
-        GDB_SHA256="26ce655216cd03f4611518a7a1c31d80ec8e884c16715e9ba8b436822e51434b"
-        CHECKSUMS+=("${GDB_SHA256}")
     fi
 
     # target dir
