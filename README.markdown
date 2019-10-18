@@ -23,11 +23,12 @@ Usage
 The basic syntax is:
 
 ```
-mingw-w64-build [-j # | --jobs #] [--disable-gdb] target [install-dir]
+mingw-w64-build [-f | --force] [-j # | --jobs #] [--disable-gdb] target [install-dir]
 ```
 
 Where:
 
+- `-f, --force` remove and replace existing target (overwrite)
 - `-j, --jobs` number of concurrent build jobs to run, default: 0 (automatic)
 - `--disable-gdb` disable building GDB debugger
 
