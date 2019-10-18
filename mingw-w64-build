@@ -185,6 +185,7 @@ function mingw-w64-build {  # mingw-w64-build [args] $TARGET_PARAM $TARGET_DIR
     SELF="${BASH_SOURCE[0]}"
     SELF_NAME=$(basename "${SELF}")
     HELP="\
+${NAME} ${VERSION}
 usage: ${SELF_NAME} [-h | --help]
        ${SELF_NAME} [-l | --list]
        ${SELF_NAME} [-v | --version]
