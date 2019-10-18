@@ -348,9 +348,19 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # list components
     if [[ "${LIST}" == true ]]; then
-        echo "Components:"
+        local COMPONENTS COMPONENTS_TEMP
+        COMPONENTS_TEMP=()
         for I in "${!NAMES[@]}"; do
-            echo "  ${NAMES[$I]} ${VERSIONS[$I]}"
+            COMPONENTS_TEMP+=("${NAMES[$I]} ${VERSIONS[$I]}")
+        done
+        COMPONENTS_TEMP+=('winpthreads')
+        OIFS="${IFS}"
+        IFS=$'\n'
+        COMPONENTS=($(sort <<< "${COMPONENTS_TEMP[*]}"))
+        IFS="${OIFS}"
+        echo "Components:"
+        for I in "${!COMPONENTS[@]}"; do
+            echo "  ${COMPONENTS[$I]}"
         done
         return 0
     fi
