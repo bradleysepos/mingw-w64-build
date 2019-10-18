@@ -86,7 +86,7 @@ function display_progress {
     local str=""
     while [ "$(ps a | awk '{print $1}' | grep ${1})" ]; do
         printf "%c" "$str"
-        sleep 15
+        sleep 5
         str="."
     done
 }
