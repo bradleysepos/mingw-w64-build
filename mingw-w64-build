@@ -103,21 +103,6 @@ function die_gracefully {
 function mingw-w64-build {  # mingw-w64-build [args] $TARGET_PARAM $TARGET_DIR
     set -o pipefail
 
-    # dependencies
-    local DEPS
-    DEPS=("bison" "bzip2" "curl" "flex" "g++" "gcc" "gunzip" "m4" "make" "pax" "shasum|sha256sum")
-    check_dependencies "${DEPS[@]}" || return 1
-
-    # sha256 binary
-    local SHA256
-    if hash shasum >/dev/null 2>&1; then
-        SHA256="shasum -a 256"
-    elif hash sha256sum >/dev/null 2>&1; then
-        SHA256="sha256sum"
-    else
-        return 1
-    fi
-
     # package names
     local CONFIG_NAME BINUTILS_NAME MINGW_W64_NAME GMP_NAME MPFR_NAME MPC_NAME ISL_NAME GCC_NAME GDB_NAME NAMES
     CONFIG_NAME="config"
@@ -377,6 +362,21 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
             echo "  ${COMPONENTS[$I]}"
         done
         return 0
+    fi
+
+    # dependencies
+    local DEPS
+    DEPS=("bison" "bzip2" "curl" "flex" "g++" "gcc" "gunzip" "m4" "make" "pax" "shasum|sha256sum")
+    check_dependencies "${DEPS[@]}" || return 1
+
+    # sha256 binary
+    local SHA256
+    if hash shasum >/dev/null 2>&1; then
+        SHA256="shasum -a 256"
+    elif hash sha256sum >/dev/null 2>&1; then
+        SHA256="sha256sum"
+    else
+        return 1
     fi
 
     # target args
