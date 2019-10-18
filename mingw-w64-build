@@ -484,10 +484,6 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         fi
     done
 
-    # host system type
-    local SYS_TYPE
-    SYS_TYPE=$("${SOURCE_DIR}/config/config-${CONFIG_VER}/config.guess")
-
     # additional directory creation
     mkdir -p "${MINGW_W64_DIR}"
     if [[ ! -d "${MINGW_W64_DIR}" ]]; then
@@ -526,6 +522,10 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
             fi
         fi
     done
+
+    # host system type
+    local SYS_TYPE
+    SYS_TYPE=$("${SOURCE_DIR}/config/config-${CONFIG_VER}/config.guess")
 
     # build
     local TOTAL
