@@ -223,22 +223,22 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
                     help)
                         # Print help and exit
                         echo -e "${HELP}"
-                        exit 0
+                        return 0
                         ;;
                     help=*)
                         # Print help and exit
                         echo -e "${HELP}"
-                        exit 0
+                        return 0
                         ;;
                     version)
                         # Print version and exit
                         echo -e "${NAME} ${VERSION}"
-                        exit 0
+                        return 0
                         ;;
                     version=*)
                         # Print version and exit
                         echo -e "${NAME} ${VERSION}"
-                        exit 0
+                        return 0
                         ;;
                     jobs)
                         # Number of jobs
@@ -246,13 +246,13 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
                             # Option without required argument
                             echo "Option --${OPTARG} requires a value" >&2
                             echo -e "${HELP}"
-                            exit 1
+                            return 1
                         fi
                         JOBS="${!OPTIND}"
                         if [[ ! "${JOBS}" =~ ^[0-9]*$ ]]; then
                             echo "Option --${OPTARG} requires a numeric value" >&2
                             echo -e "${HELP}"
-                            exit 1
+                            return 1
                         fi
                         OPTIND=$((OPTIND + 1))
                         ;;
@@ -262,7 +262,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
                         if [[ ! "${JOBS}" =~ ^[0-9]*$ ]]; then
                             echo "Option --${OPTARG} requires a numeric value" >&2
                             echo -e "${HELP}"
-                            exit 1
+                            return 1
                         fi
                         ;;
                     list)
@@ -284,7 +284,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
                             # Invalid option specified
                             echo "Invalid option: --${OPTARG}" >&2
                             echo -e "${HELP}"
-                            exit 1
+                            return 1
                         fi
                         ;;
                 esac
@@ -292,12 +292,12 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
             h)
                 # Print help and exit
                 echo -e "${HELP}"
-                exit 0
+                return 0
                 ;;
             v)
                 # Print version and exit
                 echo "${NAME} ${VERSION}"
-                exit 0
+                return 0
                 ;;
             j)
                 # Number of jobs
