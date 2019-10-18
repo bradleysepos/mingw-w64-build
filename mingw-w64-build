@@ -520,12 +520,9 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         return 1
     fi
 
-    # host system type
-    local SYS_TYPE
-    SYS_TYPE=$("${SOURCE_DIR}/config/config-${CONFIG_VER}/config.guess")
-
     # build
-    local TOTAL
+    local SYS_TYPE TOTAL
+    SYS_TYPE=$("${SOURCE_DIR}/config/config-${CONFIG_VER}/config.guess")
     TOTAL=11
     if [[ "${DISABLE_GDB}" == true ]]; then
         TOTAL="$((${TOTAL} - 1))"
