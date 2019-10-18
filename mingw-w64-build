@@ -427,6 +427,14 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         echo "remove with: ${SELF_NAME} ${TARGET_PARAM%%.*}.distclean${2:+ $2}" >&2
         return 1
     fi
+    if [[ -e "${SOURCE_DIR}" ]]; then
+        # never reuse source dir
+        rm -rf "${SOURCE_DIR}"
+    fi
+    if [[ -e "${BUILD_DIR}" ]]; then
+        # never reuse build dir
+        rm -rf "${BUILD_DIR}"
+    fi
     mkdir -p "${TARGET_DIR}"
     if [[ ! -d "${TARGET_DIR}" ]]; then
         echo "unable to create directory: ${TARGET_DIR}" >&2
@@ -482,10 +490,6 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     done
 
     # extract
-    if [[ -e "${SOURCE_DIR}" ]]; then
-        # never reuse source dir
-        rm -rf "${SOURCE_DIR}"
-    fi
     mkdir -p "${SOURCE_DIR}"
     if [[ ! -d "${SOURCE_DIR}" ]]; then
         echo "unable to create directory: ${SOURCE_DIR}" >&2
@@ -509,10 +513,6 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     done
 
     # create build and prefix directories
-    if [[ -e "${BUILD_DIR}" ]]; then
-        # never reuse build dir
-        rm -rf "${BUILD_DIR}"
-    fi
     mkdir -p "${BUILD_DIR}"
     if [[ ! -d "${BUILD_DIR}" ]]; then
         echo "unable to create directory: ${BUILD_DIR}" >&2
