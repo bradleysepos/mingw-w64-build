@@ -23,11 +23,12 @@ Usage
 The basic syntax is:
 
 ```
-mingw-w64-build [--disable-gdb] target [install-dir]
+mingw-w64-build [-j # | --jobs #] [--disable-gdb] target [install-dir]
 ```
 
 Where:
 
+- `-j, --jobs` number of concurrent build jobs to run, default: 0 (automatic)
 - `--disable-gdb` disable building GDB debugger
 
 Available targets:
@@ -62,6 +63,27 @@ Full usage:
 
 ```
 mingw-w64-build -h
+```
+
+
+Components
+----------
+
+- binutils
+- config
+- gcc
+- gdb
+- gmp
+- isl
+- mingw-w64
+- mpc
+- mpfr
+- winpthreads
+
+Display components list with version information:
+
+```
+mingw-w64-build --list
 ```
 
 
