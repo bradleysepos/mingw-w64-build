@@ -482,6 +482,10 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     done
 
     # extract
+    if [[ -e "${SOURCE_DIR}" ]]; then
+        # never reuse source dir
+        rm -rf "${SOURCE_DIR}"
+    fi
     mkdir -p "${SOURCE_DIR}"
     if [[ ! -d "${SOURCE_DIR}" ]]; then
         echo "unable to create directory: ${SOURCE_DIR}" >&2
