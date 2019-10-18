@@ -340,11 +340,10 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         CPU_COUNT=$(grep -c processor /proc/cpuinfo 2>/dev/null)
     fi
     CPU_COUNT="${CPU_COUNT:-1}"
-
-    # begin
     [[ "${JOBS}" -eq 0 ]] && JOBS="${CPU_COUNT}"
-    echo -n "${NAME} ${VERSION}"
-    echo " (${JOBS} job$([[ ${JOBS} -gt 1 ]] && echo 's'))"
+
+    # begin output
+    echo "${NAME} ${VERSION} (${JOBS} job$([[ ${JOBS} -gt 1 ]] && echo 's'))"
 
     # list components
     if [[ "${LIST}" == true ]]; then
