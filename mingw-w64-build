@@ -415,12 +415,25 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         TARGET_DIR="${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER}"
     fi
 
-    # cleaning and directory creation
+    # directories
     local MINGW_W64_DIR PKG_DIR SOURCE_DIR BUILD_DIR
     MINGW_W64_DIR="${TARGET_DIR}/${PREFIX}"
     PKG_DIR="${TARGET_DIR}/pkg"
     SOURCE_DIR="${TARGET_DIR}/source"
     BUILD_DIR="${TARGET_DIR}/build-${PREFIX}"
+    if [[ -e "${MINGW_W64_DIR}" ]]; then
+        # prefix dir should not exist
+        echo "unable to create directory (exists): ${MINGW_W64_DIR}" >&2
+        echo "remove with: ${SELF_NAME} ${TARGET_PARAM%%.*}.distclean${2:+ $2}" >&2
+        return 1
+    fi
+    mkdir -p "${TARGET_DIR}"
+    if [[ ! -d "${TARGET_DIR}" ]]; then
+        echo "unable to create directory: ${TARGET_DIR}" >&2
+        return 1
+    fi
+
+    # clean
     case "${TARGET_PARAM}" in
         i686.clean|x86_64.clean)
             echo "rm -rf \"${BUILD_DIR}\" "
@@ -440,24 +453,13 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
             return 0
             ;;
     esac
-    mkdir -p "${TARGET_DIR}"
-    if [[ ! -d "${TARGET_DIR}" ]]; then
-        echo "unable to create directory: ${TARGET_DIR}" >&2
-        return 1
-    fi
-    if [[ -e "${MINGW_W64_DIR}" ]]; then
-        # prefix dir should not exist
-        echo "unable to create directory (exists): ${MINGW_W64_DIR}" >&2
-        echo "remove with: ${SELF_NAME} ${TARGET_PARAM%%.*}.distclean${2:+ $2}" >&2
-        return 1
-    fi
+
+    # verify/fetch
     mkdir -p "${PKG_DIR}"
     if [[ ! -d "${PKG_DIR}" ]]; then
         echo "unable to create directory: ${PKG_DIR}" >&2
         return 1
     fi
-
-    # verify/fetch
     echo -n "Downloading "
     local DOWNLOAD_VERBOSE I URLS_IREF URLS CHECKSUM
     DOWNLOAD_VERBOSE=false
@@ -479,28 +481,12 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         fi
     done
 
-    # additional directory creation
-    mkdir -p "${MINGW_W64_DIR}"
-    if [[ ! -d "${MINGW_W64_DIR}" ]]; then
-        echo "unable to create directory: ${MINGW_W64_DIR}" >&2
-        return 1
-    fi
+    # extract
     mkdir -p "${SOURCE_DIR}"
     if [[ ! -d "${SOURCE_DIR}" ]]; then
         echo "unable to create directory: ${SOURCE_DIR}" >&2
         return 1
     fi
-    if [[ -e "${BUILD_DIR}" ]]; then
-        # never reuse build dir
-        rm -rf "${BUILD_DIR}"
-    fi
-    mkdir -p "${BUILD_DIR}"
-    if [[ ! -d "${BUILD_DIR}" ]]; then
-        echo "unable to create directory: ${BUILD_DIR}" >&2
-        return 1
-    fi
-
-    # extract
     echo ""
     echo -n "Extracting "
     for I in "${!PKGS[@]}"; do
@@ -517,6 +503,22 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
             fi
         fi
     done
+
+    # create build and prefix directories
+    if [[ -e "${BUILD_DIR}" ]]; then
+        # never reuse build dir
+        rm -rf "${BUILD_DIR}"
+    fi
+    mkdir -p "${BUILD_DIR}"
+    if [[ ! -d "${BUILD_DIR}" ]]; then
+        echo "unable to create directory: ${BUILD_DIR}" >&2
+        return 1
+    fi
+    mkdir -p "${MINGW_W64_DIR}"
+    if [[ ! -d "${MINGW_W64_DIR}" ]]; then
+        echo "unable to create directory: ${MINGW_W64_DIR}" >&2
+        return 1
+    fi
 
     # host system type
     local SYS_TYPE
