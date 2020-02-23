@@ -99,6 +99,15 @@ function die_gracefully {
     trap - TERM && kill -- -$$
 }
 
+# tests whether a string is an exact match for an array item
+function in_array {  # in_array needle haystack[@]
+    local e
+    for e in "${@:2}"; do
+        [[ "${e}" == "${1}" ]] && return 0
+    done
+    return 1
+}
+
 # builds mingw-w64
 function mingw-w64-build {  # mingw-w64-build [args] $TARGET_PARAM $TARGET_DIR
     set -o pipefail
