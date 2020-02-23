@@ -175,7 +175,7 @@ function mingw-w64-build {  # mingw-w64-build [args] $TARGET_PARAM $TARGET_DIR
     # internal vars
     local NAME VERSION SELF SELF_NAME HELP
     NAME="mingw-w64-build"
-    VERSION="8.0.0"
+    VERSION="8.0.1"
     SELF="${BASH_SOURCE[0]}"
     SELF_NAME=$(basename "${SELF}")
     HELP="\
