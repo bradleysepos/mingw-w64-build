@@ -1,4 +1,4 @@
-mingw-w64-build
+mingw-w64-build ![Build](https://github.com/bradleysepos/mingw-w64-build/workflows/Build/badge.svg)
 ===============
 
 mingw-w64-build is a Bash script for downloading and building the mingw-w64 toolchain.
