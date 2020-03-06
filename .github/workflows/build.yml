@@ -52,7 +52,7 @@ jobs:
         ./mingw-w64-build i686.clean
         ./mingw-w64-build pkgclean
         cd /home/runner/toolchains/
-        rm -rf build-mingw-w64-x86_64.noindex
+        rm -rf build-mingw-w64-i686.noindex
         rm -rf source.noindex
         rm -rf pkg
         tar cvzf mingw-w64-build-$BUILD_VERSION-i686-linux.tar.gz ~/toolchains/  
@@ -100,7 +100,7 @@ jobs:
         ./mingw-w64-build i686.clean
         ./mingw-w64-build pkgclean
         cd /Users/runner/toolchains/
-        rm -rf build-mingw-w64-x86_64.noindex
+        rm -rf build-mingw-w64-i686.noindex
         rm -rf source.noindex
         rm -rf pkg
         tar cvzf mingw-w64-build-$BUILD_VERSION-i686-macos.tar.gz ~/toolchains/  
