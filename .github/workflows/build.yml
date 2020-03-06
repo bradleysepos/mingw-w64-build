@@ -10,7 +10,7 @@ on:
 jobs:
 
   build_mingw_toolchain:
-    name: MinGW-W64 Toolchain (x64)
+    name: Linux MinGW-W64
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -37,7 +37,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           
   build_mingw_toolchain_i686:
-    name: MinGW-W64 Toolchain (i686)
+    name: Linux MinGW-W64 i686
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -64,7 +64,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       
   build_mingw_toolchain_macOS:
-    name: macOS MinGW-W64 Toolchain
+    name: macOS MinGW-W64
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
@@ -88,7 +88,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           
   build_mingw_toolchain_macOS_i686:
-    name: macOS MinGW-W64 Toolchain (i686)
+    name: macOS MinGW-W64 i686
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
