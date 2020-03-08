@@ -23,14 +23,9 @@ jobs:
         BUILD_VERSION="$(./mingw-w64-build --version | cut -d ' ' -f 2)"
         CWD=$(pwd)
         ./mingw-w64-build --disable-gdb x86_64 ~/toolchains
-        ./mingw-w64-build x86_64.clean
-        ./mingw-w64-build pkgclean
-        cd ~/toolchains/
-        rm -rf build-mingw-w64-x86_64.noindex
-        rm -rf source.noindex
-        rm -rf pkg
-        cd $CWD
-        tar cvzf mingw-w64-build-$BUILD_VERSION-x86_64-linux.tar.gz ~/toolchains/  
+        ./mingw-w64-build x86_64.clean ~/toolchains
+        ./mingw-w64-build pkgclean ~/toolchains
+        tar cvzf mingw-w64-build-$BUILD_VERSION-x86_64-linux.tar.gz -C ~/toolchains/ .
     - name: Upload Release Asset
       if: github.event_name == 'release'
       uses: AButler/upload-release-assets@v2.0
@@ -52,13 +47,9 @@ jobs:
         BUILD_VERSION="$(./mingw-w64-build --version | cut -d ' ' -f 2)"
         CWD=$(pwd)
         ./mingw-w64-build --disable-gdb i686 ~/toolchains
-        ./mingw-w64-build i686.clean
-        ./mingw-w64-build pkgclean
-        cd ~/toolchains/
-        rm -rf build-mingw-w64-i686.noindex
-        rm -rf source.noindex
-        cd $CWD
-        tar cvzf mingw-w64-build-$BUILD_VERSION-i686-linux.tar.gz ~/toolchains/  
+        ./mingw-w64-build i686.clean ~/toolchains
+        ./mingw-w64-build pkgclean ~/toolchains
+        tar cvzf mingw-w64-build-$BUILD_VERSION-i686-linux.tar.gz -C ~/toolchains/ . 
     - name: Upload Release Asset
       if: github.event_name == 'release'
       uses: AButler/upload-release-assets@v2.0
@@ -77,14 +68,9 @@ jobs:
         BUILD_VERSION="$(./mingw-w64-build --version | cut -d ' ' -f 2)"
         CWD=$(pwd)
         ./mingw-w64-build --disable-gdb x86_64 ~/toolchains
-        ./mingw-w64-build x86_64.clean
-        ./mingw-w64-build pkgclean
-        cd ~/toolchains/
-        rm -rf build-mingw-w64-x86_64.noindex
-        rm -rf source.noindex
-        rm -rf pkg
-        cd $CWD
-        tar cvzf mingw-w64-build-$BUILD_VERSION-x86_64-macos.tar.gz ~/toolchains/  
+        ./mingw-w64-build x86_64.clean ~/toolchains
+        ./mingw-w64-build pkgclean ~/toolchains
+        tar cvzf mingw-w64-build-$BUILD_VERSION-x86_64-macos.tar.gz -C ~/toolchains/ .
     - name: Upload Release Asset
       if: github.event_name == 'release'
       uses: AButler/upload-release-assets@v2.0
@@ -103,14 +89,9 @@ jobs:
         BUILD_VERSION="$(./mingw-w64-build --version | cut -d ' ' -f 2)"
         CWD=$(pwd)
         ./mingw-w64-build --disable-gdb i686 ~/toolchains
-        ./mingw-w64-build i686.clean
-        ./mingw-w64-build pkgclean
-        cd ~/toolchains/
-        rm -rf build-mingw-w64-i686.noindex
-        rm -rf source.noindex
-        rm -rf pkg
-        cd $CWD
-        tar cvzf mingw-w64-build-$BUILD_VERSION-i686-macos.tar.gz ~/toolchains/  
+        ./mingw-w64-build i686.clean ~/toolchains
+        ./mingw-w64-build pkgclean ~/toolchains
+        tar cvzf mingw-w64-build-$BUILD_VERSION-i686-macos.tar.gz -C ~/toolchains/ .
     - name: Upload Release Asset
       if: github.event_name == 'release'
       uses: AButler/upload-release-assets@v2.0
