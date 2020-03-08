@@ -55,6 +55,8 @@ jobs:
         rm -rf build-mingw-w64-i686.noindex
         rm -rf source.noindex
         rm -rf pkg
+        pwd
+        ls -la
         tar cvzf mingw-w64-build-$BUILD_VERSION-i686-linux.tar.gz ~/toolchains/  
     - name: Upload Release Asset
       if: github.event_name == 'release'
