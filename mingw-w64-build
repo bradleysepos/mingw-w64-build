@@ -441,7 +441,16 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         TARGET_DIR="${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER}"
     fi
 
-    # directories
+    # create target directory
+    mkdir -p "${TARGET_DIR}"
+    if [[ ! -d "${TARGET_DIR}" ]]; then
+        echo "unable to create directory: ${TARGET_DIR}" >&2
+        return 1
+    fi
+    cd "${TARGET_DIR}"
+    TARGET_DIR=$(pwd)
+
+    # subdirectories
     local MINGW_W64_DIR PKG_DIR SOURCE_DIR BUILD_DIR
     MINGW_W64_DIR="${TARGET_DIR}/${PREFIX}"
     PKG_DIR="${TARGET_DIR}/pkg"
@@ -492,13 +501,6 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     echo -en "${CREL}"
     printf "Cleaning    [%02i/%02i] build " "${CLEAN_INDEX}" "${CLEAN_TOTAL}"
     rm -rf "${BUILD_DIR}"
-
-    # create target directory
-    mkdir -p "${TARGET_DIR}"
-    if [[ ! -d "${TARGET_DIR}" ]]; then
-        echo "unable to create directory: ${TARGET_DIR}" >&2
-        return 1
-    fi
 
     # verify/fetch
     mkdir -p "${PKG_DIR}"
