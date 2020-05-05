@@ -761,8 +761,9 @@ if [[ "${CODE}" -ne 0 ]]; then
     PARAMS=()
     for PARAM in "${@}"; do
         if [[ "${PARAM#-}" != "${PARAM}" ]]; then
-          PARAMS+=("${PARAM}")
+            continue
         fi
+        PARAMS+=("${PARAM}")
     done
     TDIR="${PARAMS[1]}"
     echo ""
