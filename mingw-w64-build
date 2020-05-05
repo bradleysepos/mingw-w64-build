@@ -758,9 +758,16 @@ wait "${PID}" || CODE=$?
 trap - EXIT INT TERM
 
 if [[ "${CODE}" -ne 0 ]]; then
+    PARAMS=()
+    for PARAM in "${@}"; do
+        if [[ "${PARAM#-}" != "${PARAM}" ]]; then
+          PARAMS+=("${PARAM}")
+        fi
+    done
+    TDIR="${PARAMS[1]}"
     echo ""
     echo "error: subprocess returned non-zero error code (${CODE})" >&2
-    echo "logs and temporary files may exist at ${2:-$HOME/toolchains}" >&2
+    echo "logs and temporary files may exist at ${TDIR:-$HOME/toolchains}" >&2
     exit 1
 fi
 exit 0
