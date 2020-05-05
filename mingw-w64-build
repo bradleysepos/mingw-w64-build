@@ -207,7 +207,6 @@ targets:
   x86_64.distclean
   pkgclean
 default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER}"
-    CREL=$(echo -e "\r"$(tput el))
 
     # args
     local FORCE JOBS LIST DISABLE_GDB OPTIND OPTSPEC OPTARRAY
@@ -487,7 +486,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         CLEAN_TOTAL=$((CLEAN_TOTAL+1))
         printf "Cleaning    [%02i/%02i] dist " "${CLEAN_INDEX}" "${CLEAN_TOTAL}"
         rm -rf "${MINGW_W64_DIR}"
-        echo -en "${CREL}"
+        echo ""
     elif [[ -e "${MINGW_W64_DIR}" ]]; then
         # prefix dir should not exist
         echo "unable to create directory (exists): ${MINGW_W64_DIR}" >&2
@@ -498,7 +497,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     printf "Cleaning    [%02i/%02i] source " "${CLEAN_INDEX}" "${CLEAN_TOTAL}"
     rm -rf "${SOURCE_DIR}"
     CLEAN_INDEX=$((CLEAN_INDEX+1))
-    echo -en "${CREL}"
+    echo ""
     printf "Cleaning    [%02i/%02i] build " "${CLEAN_INDEX}" "${CLEAN_TOTAL}"
     rm -rf "${BUILD_DIR}"
 
@@ -508,12 +507,10 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         echo "unable to create directory: ${PKG_DIR}" >&2
         return 1
     fi
-    echo ""
-    echo -n "Downloading "
     local DOWNLOAD_VERBOSE I URLS_IREF URLS CHECKSUM
     DOWNLOAD_VERBOSE=false
     for I in "${!PKGS[@]}"; do
-        echo -en "${CREL}"
+        echo ""
         printf "Downloading [%02i/%02i] %s " "$((I+1))" "${#PKGS[@]}" "${NAMES[I]} ${VERSIONS[I]}"
         URLS_IREF="${URLS_VARNAMES[I]}[@]"
         URLS="${!URLS_IREF}"
@@ -536,10 +533,8 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         echo "unable to create directory: ${SOURCE_DIR}" >&2
         return 1
     fi
-    echo ""
-    echo -n "Extracting "
     for I in "${!PKGS[@]}"; do
-        echo -en "${CREL}"
+        echo ""
         printf "Extracting  [%02i/%02i] %s " "$((I+1))" "${#PKGS[@]}" "${PKGS[I]}"
         if [[ -e "${SOURCE_DIR}/${NAMES[I]}" ]]; then
             rm -rf "${SOURCE_DIR}/${NAMES[I]}"
@@ -572,11 +567,9 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     if [[ "${DISABLE_GDB}" == true ]]; then
         TOTAL="$((${TOTAL} - 1))"
     fi
-    echo ""
-    echo -n "Building "
 
     # binutils
-    echo -en "${CREL}"
+    echo ""
     printf "Building    [%02i/%02i] %s " "1" "${TOTAL}" "binutils ${BINUTILS_VER}"
     touch "${BUILD_DIR}/binutils.log"
     mkdir -pv "${BUILD_DIR}/binutils" > "${BUILD_DIR}/binutils.log" 2>&1 || return 1
@@ -589,7 +582,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     export PATH="${MINGW_W64_DIR}/bin:${PATH}"
 
     # mingw-w64 headers
-    echo -en "${CREL}"
+    echo ""
     printf "Building    [%02i/%02i] %s " "2" "${TOTAL}" "mingw-w64 ${MINGW_W64_VER} headers"
     touch "${BUILD_DIR}/mingw-w64-headers.log"
     mkdir -pv "${BUILD_DIR}/mingw-w64-headers" > "${BUILD_DIR}/mingw-w64-headers.log" 2>&1 || return 1
@@ -615,7 +608,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     fi
 
     # gmp
-    echo -en "${CREL}"
+    echo ""
     printf "Building    [%02i/%02i] %s " "3" "${TOTAL}" "gmp ${GMP_VER}"
     touch "${BUILD_DIR}/gmp.log"
     local GMP_DIR
@@ -628,7 +621,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     make install >> "${BUILD_DIR}/gmp.log" 2>&1 || return 1
 
     # mpfr
-    echo -en "${CREL}"
+    echo ""
     printf "Building    [%02i/%02i] %s " "4" "${TOTAL}" "mpfr ${MPFR_VER}"
     touch "${BUILD_DIR}/mpfr.log"
     local MPFR_DIR
@@ -640,7 +633,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     make install >> "${BUILD_DIR}/mpfr.log" 2>&1 || return 1
 
     # mpc
-    echo -en "${CREL}"
+    echo ""
     printf "Building    [%02i/%02i] %s " "5" "${TOTAL}" "mpc ${MPC_VER}"
     touch "${BUILD_DIR}/mpc.log"
     local MPC_DIR
@@ -652,7 +645,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     make install >> "${BUILD_DIR}/mpc.log" 2>&1 || return 1
 
     # isl
-    echo -en "${CREL}"
+    echo ""
     printf "Building    [%02i/%02i] %s " "6" "${TOTAL}" "isl ${ISL_VER}"
     touch "${BUILD_DIR}/isl.log"
     local ISL_DIR
@@ -664,7 +657,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     make install >> "${BUILD_DIR}/isl.log" 2>&1 || return 1
 
     # gcc compilers
-    echo -en "${CREL}"
+    echo ""
     printf "Building    [%02i/%02i] %s " "7" "${TOTAL}" "gcc ${GCC_VER} compilers"
     touch "${BUILD_DIR}/gcc.log"
     local GCC_CONFIG_EXTRA
@@ -679,7 +672,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     make install-gcc >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
 
     # mingw-w64 runtime
-    echo -en "${CREL}"
+    echo ""
     printf "Building    [%02i/%02i] %s " "8" "${TOTAL}" "mingw-w64 ${MINGW_W64_VER} runtime"
     touch "${BUILD_DIR}/mingw-w64-crt.log"
     export CC=""
@@ -705,7 +698,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     ln -s ../lib lib
 
     # gcc libraries
-    echo -en "${CREL}"
+    echo ""
     printf "Building    [%02i/%02i] %s " "9" "${TOTAL}" "gcc ${GCC_VER} libraries"
     touch "${BUILD_DIR}/gcc.log"
     cd "${BUILD_DIR}/gcc"
@@ -715,7 +708,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     make install-strip >> "${BUILD_DIR}/gcc.log" 2>&1 || return 1
 
     # winpthreads
-    echo -en "${CREL}"
+    echo ""
     printf "Building    [%02i/%02i] %s " "10" "${TOTAL}" "winpthreads"
     touch "${BUILD_DIR}/winpthreads.log"
     mkdir -pv "${BUILD_DIR}/winpthreads" > "${BUILD_DIR}/winpthreads.log" 2>&1 || return 1
@@ -726,7 +719,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
 
     # gdb
     if [[ "${DISABLE_GDB}" == false ]]; then
-        echo -en "${CREL}"
+        echo ""
         printf "Building    [%02i/%02i] %s " "11" "${TOTAL}" "gdb"
         touch "${BUILD_DIR}/gdb.log"
         mkdir -pv "${BUILD_DIR}/gdb" > "${BUILD_DIR}/gdb.log" 2>&1 || return 1
