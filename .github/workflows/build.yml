@@ -66,6 +66,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build Toolchain
       run: |
+        export MACOSX_DEPLOYMENT_TARGET="10.13"
         chmod 755 mingw-w64-build
         BUILD_VERSION="$(./mingw-w64-build --version | cut -d ' ' -f 2)"
         BUILD_VERSION="${BUILD_VERSION:-0.0.0}"
@@ -88,6 +89,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build Toolchain
       run: |
+        export MACOSX_DEPLOYMENT_TARGET="10.13"
         chmod 755 mingw-w64-build
         BUILD_VERSION="$(./mingw-w64-build --version | cut -d ' ' -f 2)"
         BUILD_VERSION="${BUILD_VERSION:-0.0.0}"
