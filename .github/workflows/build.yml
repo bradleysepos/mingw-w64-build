@@ -26,7 +26,7 @@ jobs:
         ./mingw-w64-build x86_64.clean "mingw-w64-toolchain-${BUILD_VERSION}-linux-x86_64"
         ./mingw-w64-build pkgclean "mingw-w64-toolchain-${BUILD_VERSION}-linux-x86_64"
         ./mingw-w64-build --list > "mingw-w64-toolchain-${BUILD_VERSION}-linux-x86_64/versions.txt"
-        tar -cvzf "mingw-w64-toolchain-${BUILD_VERSION}-linux-x86_64.tar.gz" "mingw-w64-toolchain-${BUILD_VERSION}-linux-x86_64"/
+        tar -cvzf "mingw-w64-toolchain-${BUILD_VERSION}-linux-x86_64.tar.gz" "mingw-w64-toolchain-${BUILD_VERSION}-linux-x86_64"
     - name: Upload Release Asset
       if: github.event_name == 'release'
       uses: AButler/upload-release-assets@v2.0
@@ -51,7 +51,7 @@ jobs:
         ./mingw-w64-build i686.clean "mingw-w64-toolchain-${BUILD_VERSION}-linux-i686"
         ./mingw-w64-build pkgclean "mingw-w64-toolchain-${BUILD_VERSION}-linux-i686"
         ./mingw-w64-build --list > "mingw-w64-toolchain-${BUILD_VERSION}-linux-i686/versions.txt"
-        tar -cvzf "mingw-w64-toolchain-${BUILD_VERSION}-linux-i686.tar.gz" "mingw-w64-toolchain-${BUILD_VERSION}-linux-i686"/
+        tar -cvzf "mingw-w64-toolchain-${BUILD_VERSION}-linux-i686.tar.gz" "mingw-w64-toolchain-${BUILD_VERSION}-linux-i686"
     - name: Upload Release Asset
       if: github.event_name == 'release'
       uses: AButler/upload-release-assets@v2.0
@@ -74,7 +74,7 @@ jobs:
         ./mingw-w64-build x86_64.clean "mingw-w64-toolchain-${BUILD_VERSION}-mac-x86_64"
         ./mingw-w64-build pkgclean "mingw-w64-toolchain-${BUILD_VERSION}-mac-x86_64"
         ./mingw-w64-build --list > "mingw-w64-toolchain-${BUILD_VERSION}-mac-x86_64/versions.txt"
-        tar -cvzf "mingw-w64-toolchain-${BUILD_VERSION}-mac-x86_64.tar.gz" "mingw-w64-toolchain-${BUILD_VERSION}-mac-x86_64"/
+        tar -cvzf "mingw-w64-toolchain-${BUILD_VERSION}-mac-x86_64.tar.gz" "mingw-w64-toolchain-${BUILD_VERSION}-mac-x86_64"
     - name: Upload Release Asset
       if: github.event_name == 'release'
       uses: AButler/upload-release-assets@v2.0
@@ -97,7 +97,7 @@ jobs:
         ./mingw-w64-build i686.clean "mingw-w64-toolchain-${BUILD_VERSION}-mac-i686"
         ./mingw-w64-build pkgclean "mingw-w64-toolchain-${BUILD_VERSION}-mac-i686"
         ./mingw-w64-build --list > "mingw-w64-toolchain-${BUILD_VERSION}-mac-i686/versions.txt"
-        tar -cvzf "mingw-w64-toolchain-${BUILD_VERSION}-mac-i686.tar.gz" "mingw-w64-toolchain-${BUILD_VERSION}-mac-i686"/
+        tar -cvzf "mingw-w64-toolchain-${BUILD_VERSION}-mac-i686.tar.gz" "mingw-w64-toolchain-${BUILD_VERSION}-mac-i686"
     - name: Upload Release Asset
       if: github.event_name == 'release'
       uses: AButler/upload-release-assets@v2.0
