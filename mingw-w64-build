@@ -722,9 +722,11 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         echo '#!/bin/sh' > makeinfo
         echo 'echo "makeinfo (GNU texinfo) 5.2"' >> makeinfo
         chmod a+x makeinfo
-        "${SOURCE_DIR}/gdb/gdb-${GDB_VER}/configure" --build="${SYS_TYPE}" --host="${TARGET}" --prefix="${MINGW_W64_DIR}" --disable-shared --enable-static MAKEINFO="${BUILD_DIR}/gdb/makeinfo" >> "${LOG_DIR}/gdb.log" 2>&1 || return 1
+        "${SOURCE_DIR}/gdb/gdb-${GDB_VER}/configure" --build="${SYS_TYPE}" --host="${TARGET}" --prefix="${MINGW_W64_DIR}" -disable-multilib --enable-checking=release --enable-languages=c,c++ --enable-lto --disable-shared --enable-static MAKEINFO="${BUILD_DIR}/gdb/makeinfo" >> "${LOG_DIR}/gdb.log" 2>&1 || return 1
         make -j "${JOBS}" >> "${LOG_DIR}/gdb.log" 2>&1 || return 1
         make install >> "${LOG_DIR}/gdb.log" 2>&1 || return 1
+        "${TARGET}"-strip "${MINGW_W64_DIR}/bin/gdb.exe" >> "${LOG_DIR}/gdb.log" 2>&1 || return 1
+        "${TARGET}"-strip "${MINGW_W64_DIR}/bin/gdbserver.exe" >> "${LOG_DIR}/gdb.log" 2>&1 || return 1
     fi
 
     # clean up
