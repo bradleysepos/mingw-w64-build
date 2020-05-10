@@ -582,7 +582,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     mkdir -pv "${BUILD_DIR}/mingw-w64-headers" > "${LOG_DIR}/mingw-w64-headers.log" 2>&1 || return 1
     cd "${BUILD_DIR}/mingw-w64-headers"
     "${SOURCE_DIR}/mingw-w64/mingw-w64-v${MINGW_W64_VER}/mingw-w64-headers/configure" --build="${SYS_TYPE}" --host="${TARGET}" --prefix="${MINGW_W64_DIR}" >> "${LOG_DIR}/mingw-w64-headers.log" 2>&1 || return 1
-    make install >> "${LOG_DIR}/mingw-w64-headers.log" 2>&1 || return 1
+    make install-strip >> "${LOG_DIR}/mingw-w64-headers.log" 2>&1 || return 1
 
     # create symlinks
     cd "${MINGW_W64_DIR}"
@@ -663,7 +663,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     cd "${BUILD_DIR}/gcc"
     "${SOURCE_DIR}/gcc/gcc-${GCC_VER}/configure" CFLAGS="-I${GMP_DIR}/include -I${MPFR_DIR}/include -I${MPC_DIR}/include -I${ISL_DIR}/include" CPPFLAGS="-I${GMP_DIR}/include -I${MPFR_DIR}/include -I${MPC_DIR}/include -I${ISL_DIR}/include" LDFLAGS="-L${GMP_DIR}/lib -L${MPFR_DIR}/lib -L${MPC_DIR}/lib -L${ISL_DIR}/lib" --build="${SYS_TYPE}" --host="${SYS_TYPE}" --target="${TARGET}" --prefix="${MINGW_W64_DIR}" --with-sysroot="${MINGW_W64_DIR}" --with-gmp="${GMP_DIR}" --with-mpfr="${MPFR_DIR}" --with-mpc="${MPC_DIR}" --with-isl="${ISL_DIR}" --disable-multilib --disable-nls --disable-libstdcxx-pch --disable-win32-registry --enable-checking=release --enable-languages=c,c++ --enable-lto --disable-shared --enable-static "${GCC_CONFIG_EXTRA[@]}" >> "${LOG_DIR}/gcc.log" 2>&1 || return 1
     make -j "${JOBS}" all-gcc >> "${LOG_DIR}/gcc.log" 2>&1 || return 1
-    make install-gcc >> "${LOG_DIR}/gcc.log" 2>&1 || return 1
+    make install-strip-gcc >> "${LOG_DIR}/gcc.log" 2>&1 || return 1
 
     # mingw-w64 runtime
     echo ""
@@ -709,7 +709,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     cd "${BUILD_DIR}/winpthreads"
     "${SOURCE_DIR}/mingw-w64/mingw-w64-v${MINGW_W64_VER}/mingw-w64-libraries/winpthreads/configure" --build="${SYS_TYPE}" --host="${TARGET}" --prefix="${MINGW_W64_DIR}" --disable-shared --enable-static >> "${LOG_DIR}/winpthreads.log" 2>&1 || return 1
     make -j "${JOBS}" >> "${LOG_DIR}/winpthreads.log" 2>&1 || return 1
-    make install >> "${LOG_DIR}/winpthreads.log" 2>&1 || return 1
+    make install-strip >> "${LOG_DIR}/winpthreads.log" 2>&1 || return 1
 
     # gdb
     if [[ "${DISABLE_GDB}" == false ]]; then
