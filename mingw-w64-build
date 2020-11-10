@@ -68,6 +68,7 @@ function download_url {  # download_url $VERBOSE $FILE $URLS
                 return 1
             fi
         fi
+        return 0
     done
 }
 
