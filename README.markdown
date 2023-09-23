@@ -91,5 +91,5 @@ mingw-w64-build --list
 License
 -------
 
-Copyright 2021 Bradley Sepos  
+Copyright 2023 Bradley Sepos  
 Released under the MIT License. See [LICENSE](LICENSE) for details.
