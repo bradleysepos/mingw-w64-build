@@ -715,7 +715,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     # gdb
     if [[ "${DISABLE_GDB}" == false ]]; then
         echo ""
-        printf "Building    [%02i/%02i] %s " "11" "${TOTAL}" "gdb"
+        printf "Building    [%02i/%02i] %s " "11" "${TOTAL}" "gdb ${GDB_VER}"
         touch "${LOG_DIR}/gdb.log"
         mkdir -pv "${BUILD_DIR}/gdb" > "${LOG_DIR}/gdb.log" 2>&1 || return 1
         cd "${BUILD_DIR}/gdb"
