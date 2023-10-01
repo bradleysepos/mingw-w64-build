@@ -216,7 +216,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     DISABLE_GDB=false
     OPTIND=1
     OPTSPEC=":-:hlvfj:"
-    OPTARRAY=('-h' '--help' '-l' '--list' '-v' '--version' '--force' '-j' '--jobs' '--disable-gdb')  # all short and long options
+    OPTARRAY=('-h' '--help' '-l' '--list' '-v' '--version' '-f' '--force' '-j' '--jobs' '--disable-gdb')  # all short and long options
     while getopts "${OPTSPEC}" OPT; do
         case "${OPT}" in
             -)
