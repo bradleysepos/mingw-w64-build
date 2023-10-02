@@ -183,7 +183,8 @@ ${NAME} ${VERSION}
 usage: ${SELF_NAME} [-h | --help]
        ${SELF_NAME} [-l | --list]
        ${SELF_NAME} [-v | --version]
-       ${SELF_NAME} [-f | --force] [-j # | --jobs #] [--disable-gdb] target [install-dir]
+       ${SELF_NAME} [-f | --force] [-j # | --jobs #] [--msvcrt runtime]
+                    [--disable-gdb] target [install-dir]
 where:
   -h, --help
         display this help text
@@ -196,6 +197,9 @@ where:
   -j, --jobs
         number of concurrent build jobs to run
         default: 0 (automatic)
+  --msvcrt
+        msvc runtime version (msvcrt or ucrt)
+        default: msvcrt
   --disable-gdb
         disable building GDB debugger
 targets:
@@ -206,17 +210,18 @@ targets:
   x86_64.clean
   x86_64.distclean
   pkgclean
-default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER}"
+default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-msvcrt-gcc-${GCC_VER}"
 
     # args
     local FORCE JOBS LIST DISABLE_GDB OPTIND OPTSPEC OPTARRAY
     FORCE=false
     JOBS=0
     LIST=false
+    MSVCRT="msvcrt"
     DISABLE_GDB=false
     OPTIND=1
     OPTSPEC=":-:hlvfj:"
-    OPTARRAY=('-h' '--help' '-l' '--list' '-v' '--version' '-f' '--force' '-j' '--jobs' '--disable-gdb')  # all short and long options
+    OPTARRAY=('-h' '--help' '-l' '--list' '-v' '--version' '-f' '--force' '-j' '--jobs' '--msvcrt' '--disable-gdb')  # all short and long options
     while getopts "${OPTSPEC}" OPT; do
         case "${OPT}" in
             -)
@@ -280,6 +285,31 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
                         JOBS="${OPTARG#*=}"
                         if [[ ! "${JOBS}" =~ ^[0-9]*$ ]]; then
                             echo "Option --${OPTARG} requires a numeric value" >&2
+                            echo -e "${HELP}"
+                            return 1
+                        fi
+                        ;;
+                    msvcrt)
+                        # MSVC runtime
+                        if [[ -z ${!OPTIND+isset} ]] || in_array "${!OPTIND}" "${OPTARRAY[@]}"; then
+                            # Option without required argument
+                            echo "Option --${OPTARG} requires a value" >&2
+                            echo -e "${HELP}"
+                            return 1
+                        fi
+                        MSVCRT="${!OPTIND}"
+                        if [[ "${MSVCRT}" != "msvcrt" ]] && [[ "${MSVCRT}" != "ucrt" ]]; then
+                            echo "Option --${OPTARG} value must be msvcrt or ucrt" >&2
+                            echo -e "${HELP}"
+                            return 1
+                        fi
+                        OPTIND=$((OPTIND + 1))
+                        ;;
+                    msvcrt=*)
+                        # MSVC runtime
+                        MSVCRT="${OPTARG#*=}"
+                        if [[ "${MSVCRT}" != "msvcrt" ]] && [[ "${MSVCRT}" != "ucrt" ]]; then
+                            echo "Option --${OPTARG} value must be msvcrt or ucrt" >&2
                             echo -e "${HELP}"
                             return 1
                         fi
@@ -432,7 +462,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
         return 1
     fi
     if [[ "${TARGET_DIR:-}" == "" ]]; then
-        TARGET_DIR="${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER}"
+        TARGET_DIR="${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-${MSVCRT}-gcc-${GCC_VER}"
     fi
 
     # create target directory
@@ -585,7 +615,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     touch "${LOG_DIR}/mingw-w64-headers.log"
     mkdir -pv "${BUILD_DIR}/mingw-w64-headers" > "${LOG_DIR}/mingw-w64-headers.log" 2>&1 || return 1
     cd "${BUILD_DIR}/mingw-w64-headers"
-    "${SOURCE_DIR}/mingw-w64/mingw-w64-v${MINGW_W64_VER}/mingw-w64-headers/configure" --build="${SYS_TYPE}" --host="${TARGET}" --prefix="${MINGW_W64_DIR}" >> "${LOG_DIR}/mingw-w64-headers.log" 2>&1 || return 1
+    "${SOURCE_DIR}/mingw-w64/mingw-w64-v${MINGW_W64_VER}/mingw-w64-headers/configure" --build="${SYS_TYPE}" --host="${TARGET}" --prefix="${MINGW_W64_DIR}" --with-default-msvcrt="${MSVCRT}" >> "${LOG_DIR}/mingw-w64-headers.log" 2>&1 || return 1
     make install-strip >> "${LOG_DIR}/mingw-w64-headers.log" 2>&1 || return 1
 
     # create symlinks
@@ -684,7 +714,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-gcc-${GCC_VER
     fi
     mkdir -pv "${BUILD_DIR}/mingw-w64-crt" > "${LOG_DIR}/mingw-w64-crt.log" 2>&1 || return 1
     cd "${BUILD_DIR}/mingw-w64-crt"
-    "${SOURCE_DIR}/mingw-w64/mingw-w64-v${MINGW_W64_VER}/mingw-w64-crt/configure" --build="${SYS_TYPE}" --host="${TARGET}" --prefix="${MINGW_W64_DIR}" --with-sysroot="${MINGW_W64_DIR}" "${MINGW_W64_CONFIG_EXTRA[@]}" >> "${LOG_DIR}/mingw-w64-crt.log" 2>&1 || return 1
+    "${SOURCE_DIR}/mingw-w64/mingw-w64-v${MINGW_W64_VER}/mingw-w64-crt/configure" --build="${SYS_TYPE}" --host="${TARGET}" --prefix="${MINGW_W64_DIR}" --with-default-msvcrt="${MSVCRT}" --with-sysroot="${MINGW_W64_DIR}" "${MINGW_W64_CONFIG_EXTRA[@]}" >> "${LOG_DIR}/mingw-w64-crt.log" 2>&1 || return 1
     make -j "${JOBS}" >> "${LOG_DIR}/mingw-w64-crt.log" 2>&1 || return 1
     make install-strip >> "${LOG_DIR}/mingw-w64-crt.log" 2>&1 || return 1
 
