@@ -9,24 +9,25 @@ on:
 
 jobs:
 
-  build_mingw_toolchain_x86_64:
-    name: Mingw-w64 Linux x86_64
+  build_mingw_toolchain_msvcrt_linux_x86_64:
+    name: MinGW-w64 MSVCRT Linux x86_64
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Environment Setup
       run: |
-        sudo apt-get install bison bzip2 flex g++ gzip pax build-essential gcc 
+        sudo apt-get install bison bzip2 flex g++ gzip pax build-essential gcc
     - name: Build Toolchain
       run: |
         BUILD_PREFIX="mingw-w64-toolchain"
         BUILD_VERSION="$(./mingw-w64-build --version | cut -d ' ' -f 2)"
         BUILD_VERSION="${BUILD_VERSION:-0.0.0}"
+        BUILD_MSVCRT="msvcrt"
         BUILD_PLATFORM="linux"
         BUILD_ARCH="x86_64"
-        BUILD_TUPLE="${BUILD_PREFIX}-${BUILD_VERSION}-${BUILD_PLATFORM}-${BUILD_ARCH}"
+        BUILD_TUPLE="${BUILD_PREFIX}-${BUILD_VERSION}-${BUILD_MSVCRT}-${BUILD_PLATFORM}-${BUILD_ARCH}"
         chmod +x mingw-w64-build
-        ./mingw-w64-build --force "${BUILD_ARCH}" "${BUILD_TUPLE}"
+        ./mingw-w64-build --force --msvcrt="${BUILD_MSVCRT}" "${BUILD_ARCH}" "${BUILD_TUPLE}"
         ./mingw-w64-build "${BUILD_ARCH}".clean "${BUILD_TUPLE}"
         ./mingw-w64-build pkgclean "${BUILD_TUPLE}"
         ./mingw-w64-build --list > "${BUILD_TUPLE}"/versions.txt
@@ -37,25 +38,26 @@ jobs:
       with:
           files: '*.tar.gz'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          
-  build_mingw_toolchain_i686:
-    name: Mingw-w64 Linux i686
+
+  build_mingw_toolchain_msvcrt_linux_i686:
+    name: MinGW-w64 MSVCRT Linux i686
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Environment Setup
       run: |
-        sudo apt-get install bison bzip2 flex g++ gzip pax build-essential gcc 
+        sudo apt-get install bison bzip2 flex g++ gzip pax build-essential gcc
     - name: Build Toolchain
       run: |
         BUILD_PREFIX="mingw-w64-toolchain"
         BUILD_VERSION="$(./mingw-w64-build --version | cut -d ' ' -f 2)"
         BUILD_VERSION="${BUILD_VERSION:-0.0.0}"
+        BUILD_MSVCRT="msvcrt"
         BUILD_PLATFORM="linux"
         BUILD_ARCH="i686"
-        BUILD_TUPLE="${BUILD_PREFIX}-${BUILD_VERSION}-${BUILD_PLATFORM}-${BUILD_ARCH}"
+        BUILD_TUPLE="${BUILD_PREFIX}-${BUILD_VERSION}-${BUILD_MSVCRT}-${BUILD_PLATFORM}-${BUILD_ARCH}"
         chmod +x mingw-w64-build
-        ./mingw-w64-build --force "${BUILD_ARCH}" "${BUILD_TUPLE}"
+        ./mingw-w64-build --force --msvcrt="${BUILD_MSVCRT}" "${BUILD_ARCH}" "${BUILD_TUPLE}"
         ./mingw-w64-build "${BUILD_ARCH}".clean "${BUILD_TUPLE}"
         ./mingw-w64-build pkgclean "${BUILD_TUPLE}"
         ./mingw-w64-build --list > "${BUILD_TUPLE}"/versions.txt
@@ -66,9 +68,69 @@ jobs:
       with:
           files: '*.tar.gz'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-      
-  build_mingw_toolchain_mac_x86-64:
-    name: Mingw-w64 macOS x86_64
+
+  build_mingw_toolchain_ucrt_linux_x86_64:
+    name: MinGW-w64 UCRT Linux x86_64
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Environment Setup
+      run: |
+        sudo apt-get install bison bzip2 flex g++ gzip pax build-essential gcc
+    - name: Build Toolchain
+      run: |
+        BUILD_PREFIX="mingw-w64-toolchain"
+        BUILD_VERSION="$(./mingw-w64-build --version | cut -d ' ' -f 2)"
+        BUILD_VERSION="${BUILD_VERSION:-0.0.0}"
+        BUILD_MSVCRT="ucrt"
+        BUILD_PLATFORM="linux"
+        BUILD_ARCH="x86_64"
+        BUILD_TUPLE="${BUILD_PREFIX}-${BUILD_VERSION}-${BUILD_MSVCRT}-${BUILD_PLATFORM}-${BUILD_ARCH}"
+        chmod +x mingw-w64-build
+        ./mingw-w64-build --force --msvcrt="${BUILD_MSVCRT}" "${BUILD_ARCH}" "${BUILD_TUPLE}"
+        ./mingw-w64-build "${BUILD_ARCH}".clean "${BUILD_TUPLE}"
+        ./mingw-w64-build pkgclean "${BUILD_TUPLE}"
+        ./mingw-w64-build --list > "${BUILD_TUPLE}"/versions.txt
+        tar -cvzf "${BUILD_TUPLE}".tar.gz "${BUILD_TUPLE}"
+    - name: Upload Release Asset
+      if: github.event_name == 'release'
+      uses: AButler/upload-release-assets@v2.0
+      with:
+          files: '*.tar.gz'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  build_mingw_toolchain_ucrt_linux_i686:
+    name: MinGW-w64 UCRT Linux i686
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Environment Setup
+      run: |
+        sudo apt-get install bison bzip2 flex g++ gzip pax build-essential gcc
+    - name: Build Toolchain
+      run: |
+        BUILD_PREFIX="mingw-w64-toolchain"
+        BUILD_VERSION="$(./mingw-w64-build --version | cut -d ' ' -f 2)"
+        BUILD_VERSION="${BUILD_VERSION:-0.0.0}"
+        BUILD_MSVCRT="ucrt"
+        BUILD_PLATFORM="linux"
+        BUILD_ARCH="i686"
+        BUILD_TUPLE="${BUILD_PREFIX}-${BUILD_VERSION}-${BUILD_MSVCRT}-${BUILD_PLATFORM}-${BUILD_ARCH}"
+        chmod +x mingw-w64-build
+        ./mingw-w64-build --force --msvcrt="${BUILD_MSVCRT}" "${BUILD_ARCH}" "${BUILD_TUPLE}"
+        ./mingw-w64-build "${BUILD_ARCH}".clean "${BUILD_TUPLE}"
+        ./mingw-w64-build pkgclean "${BUILD_TUPLE}"
+        ./mingw-w64-build --list > "${BUILD_TUPLE}"/versions.txt
+        tar -cvzf "${BUILD_TUPLE}".tar.gz "${BUILD_TUPLE}"
+    - name: Upload Release Asset
+      if: github.event_name == 'release'
+      uses: AButler/upload-release-assets@v2.0
+      with:
+          files: '*.tar.gz'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  build_mingw_toolchain_msvcrt_mac_x86-64:
+    name: MinGW-w64 MSVCRT macOS x86_64
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
@@ -78,11 +140,12 @@ jobs:
         BUILD_PREFIX="mingw-w64-toolchain"
         BUILD_VERSION="$(./mingw-w64-build --version | cut -d ' ' -f 2)"
         BUILD_VERSION="${BUILD_VERSION:-0.0.0}"
+        BUILD_MSVCRT="msvcrt"
         BUILD_PLATFORM="macos"
         BUILD_ARCH="x86_64"
-        BUILD_TUPLE="${BUILD_PREFIX}-${BUILD_VERSION}-${BUILD_PLATFORM}-${BUILD_ARCH}"
+        BUILD_TUPLE="${BUILD_PREFIX}-${BUILD_VERSION}-${BUILD_MSVCRT}-${BUILD_PLATFORM}-${BUILD_ARCH}"
         chmod +x mingw-w64-build
-        ./mingw-w64-build --force "${BUILD_ARCH}" "${BUILD_TUPLE}"
+        ./mingw-w64-build --force --msvcrt="${BUILD_MSVCRT}" "${BUILD_ARCH}" "${BUILD_TUPLE}"
         ./mingw-w64-build "${BUILD_ARCH}".clean "${BUILD_TUPLE}"
         ./mingw-w64-build pkgclean "${BUILD_TUPLE}"
         ./mingw-w64-build --list > "${BUILD_TUPLE}"/versions.txt
@@ -93,9 +156,9 @@ jobs:
       with:
           files: '*.tar.gz'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          
-  build_mingw_toolchain_mac_i686:
-    name: Mingw-w64 macOS i686
+
+  build_mingw_toolchain_msvcrt_mac_i686:
+    name: MinGW-w64 MSVCRT macOS i686
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
@@ -105,11 +168,68 @@ jobs:
         BUILD_PREFIX="mingw-w64-toolchain"
         BUILD_VERSION="$(./mingw-w64-build --version | cut -d ' ' -f 2)"
         BUILD_VERSION="${BUILD_VERSION:-0.0.0}"
+        BUILD_MSVCRT="msvcrt"
         BUILD_PLATFORM="macos"
         BUILD_ARCH="i686"
-        BUILD_TUPLE="${BUILD_PREFIX}-${BUILD_VERSION}-${BUILD_PLATFORM}-${BUILD_ARCH}"
+        BUILD_TUPLE="${BUILD_PREFIX}-${BUILD_VERSION}-${BUILD_MSVCRT}-${BUILD_PLATFORM}-${BUILD_ARCH}"
         chmod +x mingw-w64-build
-        ./mingw-w64-build --force "${BUILD_ARCH}" "${BUILD_TUPLE}"
+        ./mingw-w64-build --force --msvcrt="${BUILD_MSVCRT}" "${BUILD_ARCH}" "${BUILD_TUPLE}"
+        ./mingw-w64-build "${BUILD_ARCH}".clean "${BUILD_TUPLE}"
+        ./mingw-w64-build pkgclean "${BUILD_TUPLE}"
+        ./mingw-w64-build --list > "${BUILD_TUPLE}"/versions.txt
+        tar -cvzf "${BUILD_TUPLE}".tar.gz "${BUILD_TUPLE}"
+    - name: Upload Release Asset
+      if: github.event_name == 'release'
+      uses: AButler/upload-release-assets@v2.0
+      with:
+          files: '*.tar.gz'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  build_mingw_toolchain_ucrt_mac_x86-64:
+    name: MinGW-w64 UCRT macOS x86_64
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build Toolchain
+      run: |
+        export MACOSX_DEPLOYMENT_TARGET="10.13"
+        BUILD_PREFIX="mingw-w64-toolchain"
+        BUILD_VERSION="$(./mingw-w64-build --version | cut -d ' ' -f 2)"
+        BUILD_VERSION="${BUILD_VERSION:-0.0.0}"
+        BUILD_MSVCRT="ucrt"
+        BUILD_PLATFORM="macos"
+        BUILD_ARCH="x86_64"
+        BUILD_TUPLE="${BUILD_PREFIX}-${BUILD_VERSION}-${BUILD_MSVCRT}-${BUILD_PLATFORM}-${BUILD_ARCH}"
+        chmod +x mingw-w64-build
+        ./mingw-w64-build --force --msvcrt="${BUILD_MSVCRT}" "${BUILD_ARCH}" "${BUILD_TUPLE}"
+        ./mingw-w64-build "${BUILD_ARCH}".clean "${BUILD_TUPLE}"
+        ./mingw-w64-build pkgclean "${BUILD_TUPLE}"
+        ./mingw-w64-build --list > "${BUILD_TUPLE}"/versions.txt
+        tar -cvzf "${BUILD_TUPLE}".tar.gz "${BUILD_TUPLE}"
+    - name: Upload Release Asset
+      if: github.event_name == 'release'
+      uses: AButler/upload-release-assets@v2.0
+      with:
+          files: '*.tar.gz'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  build_mingw_toolchain_ucrt_mac_i686:
+    name: MinGW-w64 UCRT macOS i686
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build Toolchain
+      run: |
+        export MACOSX_DEPLOYMENT_TARGET="10.13"
+        BUILD_PREFIX="mingw-w64-toolchain"
+        BUILD_VERSION="$(./mingw-w64-build --version | cut -d ' ' -f 2)"
+        BUILD_VERSION="${BUILD_VERSION:-0.0.0}"
+        BUILD_MSVCRT="ucrt"
+        BUILD_PLATFORM="macos"
+        BUILD_ARCH="i686"
+        BUILD_TUPLE="${BUILD_PREFIX}-${BUILD_VERSION}-${BUILD_MSVCRT}-${BUILD_PLATFORM}-${BUILD_ARCH}"
+        chmod +x mingw-w64-build
+        ./mingw-w64-build --force --msvcrt="${BUILD_MSVCRT}" "${BUILD_ARCH}" "${BUILD_TUPLE}"
         ./mingw-w64-build "${BUILD_ARCH}".clean "${BUILD_TUPLE}"
         ./mingw-w64-build pkgclean "${BUILD_TUPLE}"
         ./mingw-w64-build --list > "${BUILD_TUPLE}"/versions.txt
