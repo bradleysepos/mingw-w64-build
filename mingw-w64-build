@@ -118,14 +118,14 @@ function mingw-w64-build {  # mingw-w64-build [args] $TARGET_PARAM $TARGET_DIR
     # versions
     local CONFIG_VER BINUTILS_VER MINGW_W64_VER GMP_VER MPFR_VER MPC_VER ISL_VER GCC_VER GDB_VER VERSIONS
     CONFIG_VER="e478644"  # config.guess 2023-08-22
-    BINUTILS_VER="2.41"
+    BINUTILS_VER="2.42"
     MINGW_W64_VER="11.0.1"
     GMP_VER="6.3.0"
     MPFR_VER="4.2.1"
     MPC_VER="1.3.1"
     ISL_VER="0.26"
     GCC_VER="13.2.0"
-    GDB_VER="14.0.91"
+    GDB_VER="14.2"
 
     # filenames
     local CONFIG_PKG BINUTILS_PKG MINGW_W64_PKG GMP_PKG MPFR_PKG MPC_PKG ISL_PKG GCC_PKG GDB_PKG PKGS
@@ -150,20 +150,20 @@ function mingw-w64-build {  # mingw-w64-build [args] $TARGET_PARAM $TARGET_DIR
     MPC_URLS=("https://ftp.gnu.org/gnu/mpc/mpc-${MPC_VER}.tar.gz" "${ARCHIVE_URL}/${MPC_PKG}")
     ISL_URLS=("https://libisl.sourceforge.io/isl-${ISL_VER}.tar.bz2" "${ARCHIVE_URL}/${ISL_PKG}")
     GCC_URLS=("https://ftp.gnu.org/gnu/gcc/gcc-${GCC_VER}/gcc-${GCC_VER}.tar.gz" "${ARCHIVE_URL}/${GCC_PKG}")
-    #GDB_URLS=("https://ftp.gnu.org/gnu/gdb/gdb-${GDB_VER}.tar.gz" "${ARCHIVE_URL}/${GDB_PKG}")
-    GDB_URLS=("https://sourceware.org/pub/gdb/snapshots/branch/gdb-${GDB_VER}.tar.gz" "${ARCHIVE_URL}/${GDB_PKG}")
+    GDB_URLS=("https://ftp.gnu.org/gnu/gdb/gdb-${GDB_VER}.tar.gz" "${ARCHIVE_URL}/${GDB_PKG}")
+    # GDB_URLS=("https://sourceware.org/pub/gdb/snapshots/branch/gdb-${GDB_VER}.tar.gz" "${ARCHIVE_URL}/${GDB_PKG}")
 
     # checksums
     local CONFIG_SHA256 BINUTILS_SHA256 MINGW_W64_SHA256 GMP_SHA256 MPFR_SHA256 MPC_SHA256 ISL_SHA256 GCC_SHA256 GDB_SHA256 CHECKSUMS
     CONFIG_SHA256="5ff5d77fe5900690c150aa9ed59c6a4461279edccb906edfb34427cde05949df"
-    BINUTILS_SHA256="a4c4bec052f7b8370024e60389e194377f3f48b56618418ea51067f67aaab30b"
+    BINUTILS_SHA256="aa54850ebda5064c72cd4ec2d9b056c294252991486350d9a97ab2a6dfdfaf12"
     MINGW_W64_SHA256="3f66bce069ee8bed7439a1a13da7cb91a5e67ea6170f21317ac7f5794625ee10"
     GMP_SHA256="ac28211a7cfb609bae2e2c8d6058d66c8fe96434f740cf6fe2e47b000d1c20cb"
     MPFR_SHA256="116715552bd966c85b417c424db1bbdf639f53836eb361549d1f8d6ded5cb4c6"
     MPC_SHA256="ab642492f5cf882b74aa0cb730cd410a81edcdbec895183ce930e706c1c759b8"
     ISL_SHA256="5eac8664e9d67be6bd0bee5085d6840b8baf738c06814df47eaf4166d9776436"
     GCC_SHA256="8cb4be3796651976f94b9356fa08d833524f62420d6292c5033a9a26af315078"
-    GDB_SHA256="985261949c3dd03f3e689584539fc8e01b16fecb91a7eb7cae7396c74a5b5ca8"
+    GDB_SHA256="2de5174762e959a5e529e20c20d88a04735469d8fffd98f61664e70b341dc47c"
 
     # arrays of default components
     NAMES=("${CONFIG_NAME}" "${BINUTILS_NAME}" "${MINGW_W64_NAME}" "${GMP_NAME}" "${MPFR_NAME}" "${MPC_NAME}" "${ISL_NAME}" "${GCC_NAME}")
@@ -175,7 +175,7 @@ function mingw-w64-build {  # mingw-w64-build [args] $TARGET_PARAM $TARGET_DIR
     # internal vars
     local NAME VERSION SELF SELF_NAME HELP
     NAME="mingw-w64-build"
-    VERSION="10.0.0"
+    VERSION="11.0.1"
     SELF="${BASH_SOURCE[0]}"
     SELF_NAME=$(basename "${SELF}")
     HELP="\
