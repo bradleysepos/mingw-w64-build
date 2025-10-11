@@ -117,14 +117,14 @@ function mingw-w64-build {  # mingw-w64-build [args] $TARGET_PARAM $TARGET_DIR
 
     # versions
     local CONFIG_VER BINUTILS_VER MINGW_W64_VER GMP_VER MPFR_VER MPC_VER ISL_VER GCC_VER GDB_VER VERSIONS
-    CONFIG_VER="130dcf7"  # config.guess 2024-06-03
-    BINUTILS_VER="2.44"
-    MINGW_W64_VER="12.0.0"
+    CONFIG_VER="a2287c3"  # config.guess 2025-07-10
+    BINUTILS_VER="2.45"
+    MINGW_W64_VER="13.0.0"
     GMP_VER="6.3.0"
     MPFR_VER="4.2.2"
     MPC_VER="1.3.1"
     ISL_VER="0.27"
-    GCC_VER="14.2.0"
+    GCC_VER="15.2.0"
     GDB_VER="16.3"
 
     # filenames
@@ -143,25 +143,25 @@ function mingw-w64-build {  # mingw-w64-build [args] $TARGET_PARAM $TARGET_DIR
     local CONFIG_URLS BINUTILS_URLS MINGW_W64_URLS GMP_URLS MPFR_URLS MPC_URLS ISL_URLS GCC_URLS GDB_URLS URLS_VARNAMES ARCHIVE_URL
     ARCHIVE_URL="https://github.com/bradleysepos/mingw-w64-build-deps/releases/download/archive"
     CONFIG_URLS=("https://git.savannah.gnu.org/gitweb/?p=config.git;a=snapshot;h=${CONFIG_VER};sf=tgz" "${ARCHIVE_URL}/${CONFIG_PKG}")
-    BINUTILS_URLS=("https://ftp.gnu.org/gnu/binutils/binutils-${BINUTILS_VER}.tar.bz2" "${ARCHIVE_URL}/${BINUTILS_PKG}")
+    BINUTILS_URLS=("https://ftp.wayne.edu/gnu/binutils/binutils-${BINUTILS_VER}.tar.bz2" "${ARCHIVE_URL}/${BINUTILS_PKG}")
     MINGW_W64_URLS=("http://downloads.sourceforge.net/project/mingw-w64/mingw-w64/mingw-w64-release/mingw-w64-v${MINGW_W64_VER}.tar.bz2" "${ARCHIVE_URL}/${MINGW_W64_PKG}")
-    GMP_URLS=("https://ftp.gnu.org/gnu/gmp/gmp-${GMP_VER}.tar.bz2" "${ARCHIVE_URL}/${GMP_PKG}")
-    MPFR_URLS=("https://ftp.gnu.org/gnu/mpfr/mpfr-${MPFR_VER}.tar.gz" "${ARCHIVE_URL}/${MPFR_PKG}")
-    MPC_URLS=("https://ftp.gnu.org/gnu/mpc/mpc-${MPC_VER}.tar.gz" "${ARCHIVE_URL}/${MPC_PKG}")
+    GMP_URLS=("https://ftp.wayne.edu/gnu/gmp/gmp-${GMP_VER}.tar.bz2" "${ARCHIVE_URL}/${GMP_PKG}")
+    MPFR_URLS=("https://ftp.wayne.edu/gnu/mpfr/mpfr-${MPFR_VER}.tar.gz" "${ARCHIVE_URL}/${MPFR_PKG}")
+    MPC_URLS=("https://ftp.wayne.edu/gnu/mpc/mpc-${MPC_VER}.tar.gz" "${ARCHIVE_URL}/${MPC_PKG}")
     ISL_URLS=("https://libisl.sourceforge.io/isl-${ISL_VER}.tar.bz2" "${ARCHIVE_URL}/${ISL_PKG}")
-    GCC_URLS=("https://ftp.gnu.org/gnu/gcc/gcc-${GCC_VER}/gcc-${GCC_VER}.tar.gz" "${ARCHIVE_URL}/${GCC_PKG}")
-    GDB_URLS=("https://ftp.gnu.org/gnu/gdb/gdb-${GDB_VER}.tar.gz" "${ARCHIVE_URL}/${GDB_PKG}")
+    GCC_URLS=("https://ftp.wayne.edu/gnu/gcc/gcc-${GCC_VER}/gcc-${GCC_VER}.tar.gz" "${ARCHIVE_URL}/${GCC_PKG}")
+    GDB_URLS=("https://ftp.wayne.edu/gnu/gdb/gdb-${GDB_VER}.tar.gz" "${ARCHIVE_URL}/${GDB_PKG}")
 
     # checksums
     local CONFIG_SHA256 BINUTILS_SHA256 MINGW_W64_SHA256 GMP_SHA256 MPFR_SHA256 MPC_SHA256 ISL_SHA256 GCC_SHA256 GDB_SHA256 CHECKSUMS
-    CONFIG_SHA256="f9ed132349468176ff4a934be64f6343ea02d59f91980f6d28f9d7d4e9c45882"
-    BINUTILS_SHA256="f66390a661faa117d00fab2e79cf2dc9d097b42cc296bf3f8677d1e7b452dc3a"
-    MINGW_W64_SHA256="cc41898aac4b6e8dd5cffd7331b9d9515b912df4420a3a612b5ea2955bbeed2f"
+    CONFIG_SHA256="c92f245bfba49918f89314cbde0090b850b5bea12bac9553b7c3ab6aad255e02"
+    BINUTILS_SHA256="1393f90db70c2ebd785fb434d6127f8888c559d5eeb9c006c354b203bab3473e"
+    MINGW_W64_SHA256="5afe822af5c4edbf67daaf45eec61d538f49eef6b19524de64897c6b95828caf"
     GMP_SHA256="ac28211a7cfb609bae2e2c8d6058d66c8fe96434f740cf6fe2e47b000d1c20cb"
     MPFR_SHA256="826cbb24610bd193f36fde172233fb8c009f3f5c2ad99f644d0dea2e16a20e42"
     MPC_SHA256="ab642492f5cf882b74aa0cb730cd410a81edcdbec895183ce930e706c1c759b8"
     ISL_SHA256="626335529331f7c89fec493de929e2e92fb3d8cc860fc7af554e0518ee0029ee"
-    GCC_SHA256="7d376d445f93126dc545e2c0086d0f647c3094aae081cdb78f42ce2bc25e7293"
+    GCC_SHA256="7294d65cc1a0558cb815af0ca8c7763d86f7a31199794ede3f630c0d1b0a5723"
     GDB_SHA256="86015081217dc82c5485db9ce864dcc0b703759d2bdbe4441b095c5f900a6a37"
 
     # arrays of default components
