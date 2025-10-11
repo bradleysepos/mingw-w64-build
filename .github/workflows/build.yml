@@ -11,7 +11,7 @@ jobs:
 
   build_mingw_toolchain_msvcrt_linux_x86_64:
     name: MinGW-w64 MSVCRT Linux x86_64
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
     - uses: actions/checkout@v5
     - name: Environment Setup
@@ -71,7 +71,7 @@ jobs:
 
   build_mingw_toolchain_ucrt_linux_x86_64:
     name: MinGW-w64 UCRT Linux x86_64
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
     - uses: actions/checkout@v5
     - name: Environment Setup
