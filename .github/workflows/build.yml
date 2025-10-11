@@ -13,7 +13,7 @@ jobs:
     name: MinGW-w64 MSVCRT Linux x86_64
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v5
     - name: Environment Setup
       run: |
         sudo apt-get install bison bzip2 flex g++ gzip pax build-essential gcc
@@ -43,7 +43,7 @@ jobs:
     name: MinGW-w64 MSVCRT Linux i686
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v5
     - name: Environment Setup
       run: |
         sudo apt-get install bison bzip2 flex g++ gzip pax build-essential gcc
@@ -73,7 +73,7 @@ jobs:
     name: MinGW-w64 UCRT Linux x86_64
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v5
     - name: Environment Setup
       run: |
         sudo apt-get install bison bzip2 flex g++ gzip pax build-essential gcc
@@ -103,7 +103,7 @@ jobs:
     name: MinGW-w64 UCRT Linux i686
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v5
     - name: Environment Setup
       run: |
         sudo apt-get install bison bzip2 flex g++ gzip pax build-essential gcc
@@ -133,7 +133,7 @@ jobs:
     name: MinGW-w64 MSVCRT macOS x86_64
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v5
     - name: Build Toolchain
       run: |
         export MACOSX_DEPLOYMENT_TARGET="10.13"
@@ -161,7 +161,7 @@ jobs:
     name: MinGW-w64 MSVCRT macOS i686
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v5
     - name: Build Toolchain
       run: |
         export MACOSX_DEPLOYMENT_TARGET="10.13"
@@ -189,7 +189,7 @@ jobs:
     name: MinGW-w64 UCRT macOS x86_64
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v5
     - name: Build Toolchain
       run: |
         export MACOSX_DEPLOYMENT_TARGET="10.13"
@@ -217,7 +217,7 @@ jobs:
     name: MinGW-w64 UCRT macOS i686
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v5
     - name: Build Toolchain
       run: |
         export MACOSX_DEPLOYMENT_TARGET="10.13"
