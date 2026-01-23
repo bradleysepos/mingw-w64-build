@@ -643,6 +643,7 @@ default install-dir: ${HOME}/toolchains/mingw-w64-${MINGW_W64_VER}-msvcrt-gcc-${
     GMP_DIR="${BUILD_DIR}/gmp-${GMP_VER}-${SYS_ARCH}"
     mkdir -pv "${BUILD_DIR}/gmp" > "${LOG_DIR}/gmp.log" 2>&1 || return 1
     cd "${BUILD_DIR}/gmp"
+    sed -i.bak '/^void g(){}$/s/void g(){}/void g(int,t1 const*,t1,t2,t1 const*,int){}/' "${SOURCE_DIR}/gmp/gmp-${GMP_VER}/configure" 2>&1 || return 1
     "${SOURCE_DIR}/gmp/gmp-${GMP_VER}/configure" CC=gcc CXX=g++ CPPFLAGS=-fexceptions --build="${SYS_TYPE}" --prefix="${GMP_DIR}" --enable-cxx --disable-shared --enable-static >> "${LOG_DIR}/gmp.log" 2>&1 || return 1
     make -j "${JOBS}" >> "${LOG_DIR}/gmp.log" 2>&1 || return 1
     make check >> "${LOG_DIR}/gmp.log" 2>&1 || return 1
