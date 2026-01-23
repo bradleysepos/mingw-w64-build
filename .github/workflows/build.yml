@@ -131,7 +131,7 @@ jobs:
 
   build_mingw_toolchain_msvcrt_mac_x86-64:
     name: MinGW-w64 MSVCRT macOS x86_64
-    runs-on: macos-latest
+    runs-on: macos-14
     steps:
     - uses: actions/checkout@v2
     - name: Build Toolchain
@@ -159,7 +159,7 @@ jobs:
 
   build_mingw_toolchain_msvcrt_mac_i686:
     name: MinGW-w64 MSVCRT macOS i686
-    runs-on: macos-latest
+    runs-on: macos-14
     steps:
     - uses: actions/checkout@v2
     - name: Build Toolchain
@@ -187,7 +187,7 @@ jobs:
 
   build_mingw_toolchain_ucrt_mac_x86-64:
     name: MinGW-w64 UCRT macOS x86_64
-    runs-on: macos-latest
+    runs-on: macos-14
     steps:
     - uses: actions/checkout@v2
     - name: Build Toolchain
@@ -215,7 +215,7 @@ jobs:
 
   build_mingw_toolchain_ucrt_mac_i686:
     name: MinGW-w64 UCRT macOS i686
-    runs-on: macos-latest
+    runs-on: macos-14
     steps:
     - uses: actions/checkout@v2
     - name: Build Toolchain
