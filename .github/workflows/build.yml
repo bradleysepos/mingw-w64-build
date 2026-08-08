@@ -13,7 +13,7 @@ jobs:
     name: Create Linux Packages Cache
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Download Packages
       run: |
         chmod +x mingw-w64-build
@@ -29,7 +29,7 @@ jobs:
     name: Create macOS Packages Cache
     runs-on: macos-14
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Download Packages
       run: |
         chmod +x mingw-w64-build
@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: create_linux_packages_cache
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Environment Setup
       run: |
         sudo apt-get install bison bzip2 flex g++ gzip pax build-essential gcc
@@ -106,7 +106,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: create_linux_packages_cache
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Environment Setup
       run: |
         sudo apt-get install bison bzip2 flex g++ gzip pax build-essential gcc
@@ -166,7 +166,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: create_linux_packages_cache
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Environment Setup
       run: |
         sudo apt-get install bison bzip2 flex g++ gzip pax build-essential gcc
@@ -226,7 +226,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: create_linux_packages_cache
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Environment Setup
       run: |
         sudo apt-get install bison bzip2 flex g++ gzip pax build-essential gcc
@@ -286,7 +286,7 @@ jobs:
     runs-on: macos-14
     needs: create_macos_packages_cache
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Restore Packages Cache
       id: cache-packages-restore
       uses: actions/cache@v5.0.2
@@ -344,7 +344,7 @@ jobs:
     runs-on: macos-14
     needs: create_macos_packages_cache
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Restore Packages Cache
       id: cache-packages-restore
       uses: actions/cache@v5.0.2
@@ -402,7 +402,7 @@ jobs:
     runs-on: macos-14
     needs: create_macos_packages_cache
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Restore Packages Cache
       id: cache-packages-restore
       uses: actions/cache@v5.0.2
@@ -460,7 +460,7 @@ jobs:
     runs-on: macos-14
     needs: create_macos_packages_cache
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Restore Packages Cache
       id: cache-packages-restore
       uses: actions/cache@v5.0.2
