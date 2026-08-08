@@ -96,7 +96,7 @@ jobs:
           ${{ github.job }}-logs-${{ github.sha }}-${{ github.run_id }}-${{ github.run_number }}.tar
     - name: Upload Release Asset
       if: github.event_name == 'release'
-      uses: AButler/upload-release-assets@v3.0.1
+      uses: AButler/upload-release-assets@v4.0.0
       with:
         files: '*.tar.gz'
         repo-token: ${{ github.token }}
@@ -156,7 +156,7 @@ jobs:
           ${{ github.job }}-logs-${{ github.sha }}-${{ github.run_id }}-${{ github.run_number }}.tar
     - name: Upload Release Asset
       if: github.event_name == 'release'
-      uses: AButler/upload-release-assets@v3.0.1
+      uses: AButler/upload-release-assets@v4.0.0
       with:
         files: '*.tar.gz'
         repo-token: ${{ github.token }}
@@ -216,7 +216,7 @@ jobs:
           ${{ github.job }}-logs-${{ github.sha }}-${{ github.run_id }}-${{ github.run_number }}.tar
     - name: Upload Release Asset
       if: github.event_name == 'release'
-      uses: AButler/upload-release-assets@v3.0.1
+      uses: AButler/upload-release-assets@v4.0.0
       with:
         files: '*.tar.gz'
         repo-token: ${{ github.token }}
@@ -276,7 +276,7 @@ jobs:
           ${{ github.job }}-logs-${{ github.sha }}-${{ github.run_id }}-${{ github.run_number }}.tar
     - name: Upload Release Asset
       if: github.event_name == 'release'
-      uses: AButler/upload-release-assets@v3.0.1
+      uses: AButler/upload-release-assets@v4.0.0
       with:
         files: '*.tar.gz'
         repo-token: ${{ github.token }}
@@ -334,7 +334,7 @@ jobs:
           ${{ github.job }}-logs-${{ github.sha }}-${{ github.run_id }}-${{ github.run_number }}.tar
     - name: Upload Release Asset
       if: github.event_name == 'release'
-      uses: AButler/upload-release-assets@v3.0.1
+      uses: AButler/upload-release-assets@v4.0.0
       with:
         files: '*.tar.gz'
         repo-token: ${{ github.token }}
@@ -392,7 +392,7 @@ jobs:
           ${{ github.job }}-logs-${{ github.sha }}-${{ github.run_id }}-${{ github.run_number }}.tar
     - name: Upload Release Asset
       if: github.event_name == 'release'
-      uses: AButler/upload-release-assets@v3.0.1
+      uses: AButler/upload-release-assets@v4.0.0
       with:
         files: '*.tar.gz'
         repo-token: ${{ github.token }}
@@ -450,7 +450,7 @@ jobs:
           ${{ github.job }}-logs-${{ github.sha }}-${{ github.run_id }}-${{ github.run_number }}.tar
     - name: Upload Release Asset
       if: github.event_name == 'release'
-      uses: AButler/upload-release-assets@v3.0.1
+      uses: AButler/upload-release-assets@v4.0.0
       with:
         files: '*.tar.gz'
         repo-token: ${{ github.token }}
@@ -508,7 +508,7 @@ jobs:
           ${{ github.job }}-logs-${{ github.sha }}-${{ github.run_id }}-${{ github.run_number }}.tar
     - name: Upload Release Asset
       if: github.event_name == 'release'
-      uses: AButler/upload-release-assets@v3.0.1
+      uses: AButler/upload-release-assets@v4.0.0
       with:
         files: '*.tar.gz'
         repo-token: ${{ github.token }}
